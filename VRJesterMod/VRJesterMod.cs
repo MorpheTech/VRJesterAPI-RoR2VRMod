@@ -3,6 +3,9 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.XR;
+using Valve.VR;
+
 
 namespace VRJesterMod
 {
@@ -44,11 +47,32 @@ namespace VRJesterMod
         // We need our item definition to persist through our functions, and therefore make it a class field.
         private static ItemDef myItemDef;
 
+        Vector3 rc;
+        Vector3 lc;
+        InputDevice rightController;
+        InputDevice leftController;
+
         // The Awake() method is run at the very start when the game is initialized.
         public void Awake()
         {
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
+
+            EVRInitError eError = EVRInitError.None;
+            OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
+            Log.Info("OpenVR Background Process INITIALIZED");
+            var system = OpenVR.System;
+            if (system != null) {
+                // var valid = system.GetControllerStateWithPose(null, 0, ref state, ref pose);
+                // system.GetDeviceToAbsoluteTrackingPose();
+                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+                leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
+                leftController.TryGetFeatureValue(CommonUsages.devicePosition, out lc);
+                Log.Info($"rc: {rc}");
+                Log.Info($"lc: {lc}");
+                Log.Info("MADE IT");
+            }
 
             // First let's define our item
             myItemDef = ScriptableObject.CreateInstance<ItemDef>();
@@ -127,9 +151,13 @@ namespace VRJesterMod
         // The Update() method is run on every frame of the game.
         private void Update()
         {
+            if (Input.GetKeyDown(KeyCode.G)) {
+                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
+                Log.Info($"rightController position: {rc}");
+            }
             // This if statement checks if the player has currently pressed F2.
-            if (Input.GetKeyDown(KeyCode.F2))
-            {
+            if (Input.GetKeyDown(KeyCode.F2)) {
                 // Get the player body to use a position:
                 var transform = PlayerCharacterMasterController.instances[0].master.GetBodyObject().transform;
 
