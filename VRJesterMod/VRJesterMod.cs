@@ -36,6 +36,7 @@ namespace VRJesterMod {
             EVRInitError eError = EVRInitError.None;
             OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
             Log.Info("OpenVR Background Process Initialized");
+            gameObject.AddComponent(typeof(TriggerEventHandler));
 
             // First let's define our item
             myItemDef = ScriptableObject.CreateInstance<ItemDef>();

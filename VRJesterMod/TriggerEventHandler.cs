@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
+using Valve.VR;
 
 
 namespace VRJesterMod {
@@ -18,28 +19,31 @@ namespace VRJesterMod {
                 }
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
+                leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
+                leftController.TryGetFeatureValue(CommonUsages.devicePosition, out lc);
                 Log.Info($"rightController position: {rc}");
+                // Log.Info($"leftController position: {lc}");
             }
         }
 
-        // private void OnNewPoses(TrackedDevicePose_t[] poses) {
-        //     //Loop through each current pose
-        //     for (uint i = 0; i < poses.Length; i++) {
-        //         //Query SteamVR for controller position & rotation (aka pose)
-        //         var pose = poses[i];
-        //         var worldPose = new SteamVR_Utils.RigidTransform(pose.mDeviceToAbsoluteTracking);
-        //         //Valid tracked device at this Index?
-        //         if (pose.bDeviceIsConnected && pose.bPoseIsValid) {
-        //             var deviceClass = OpenVR.System.GetTrackedDeviceClass((uint)i);
-        //             if (deviceClass == ETrackedDeviceClass.Controller) {
-        //                 //Get Rotation and Position Data
-        //                 var pos = worldPose.pos;
-        //                 var rot = worldPose.rot.eulerAngles;
-        //                 Log.Info($"Device {i} Position: {pos}");
-        //             }
-        //         }
-        //     }
-        // }
+        private void OnNewPoses(TrackedDevicePose_t[] poses) {
+            //Loop through each current pose
+            for (uint i = 0; i < poses.Length; i++) {
+                //Query SteamVR for controller position & rotation (aka pose)
+                var pose = poses[i];
+                var worldPose = new SteamVR_Utils.RigidTransform(pose.mDeviceToAbsoluteTracking);
+                //Valid tracked device at this Index?
+                if (pose.bDeviceIsConnected && pose.bPoseIsValid) {
+                    var deviceClass = OpenVR.System.GetTrackedDeviceClass((uint)i);
+                    if (deviceClass == ETrackedDeviceClass.Controller) {
+                        //Get Rotation and Position Data
+                        var pos = worldPose.pos;
+                        var rot = worldPose.rot.eulerAngles;
+                        Log.Info($"Device {i} Position: {pos}");
+                    }
+                }
+            }
+        }
 
     }
 }
