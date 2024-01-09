@@ -7,13 +7,7 @@ using UnityEngine.XR;
 using Valve.VR;
 
 
-namespace VRJesterMod
-{
-    // This is an example plugin that can be put in
-    // BepInEx/plugins/VRJesterMod/VRJesterMod.dll to test out.
-    // It's a small plugin that adds a relatively simple item to the game,
-    // and gives you that item whenever you press F2.
-
+namespace VRJesterMod {
     // This attribute specifies that we have a dependency on a given BepInEx Plugin,
     // We need the R2API ItemAPI dependency because we are using for adding our item to the game.
     // You don't need this if you're not using R2API in your plugin,
@@ -27,19 +21,13 @@ namespace VRJesterMod
     // This attribute is required, and lists metadata for your plugin.
     [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
 
-    // This is the main declaration of our plugin class.
-    // BepInEx searches for all classes inheriting from BaseUnityPlugin to initialize on startup.
-    // BaseUnityPlugin itself inherits from MonoBehaviour,
-    // so you can use this as a reference for what you can declare and use in your plugin class
-    // More information in the Unity Docs: https://docs.unity3d.com/ScriptReference/MonoBehaviour.html
-    public class VRJesterMod : BaseUnityPlugin
-    {
+    public class VRJesterMod : BaseUnityPlugin {
         // The Plugin GUID should be a unique ID for this plugin,
         // which is human readable (as it is used in places like the config).
         // If we see this PluginGUID as it is on thunderstore,
         // we will deprecate this mod.
         // Change the PluginAuthor and the PluginName !
-        public const string PluginGUID = PluginAuthor + "." + PluginName;
+        public const string PluginGUID = "com.cali.vrjester";
         public const string PluginAuthor = "Caliburs";
         public const string PluginName = "VRJesterMod";
         public const string PluginVersion = "1.0.0";
@@ -60,19 +48,7 @@ namespace VRJesterMod
 
             EVRInitError eError = EVRInitError.None;
             OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
-            Log.Info("OpenVR Background Process INITIALIZED");
-            var system = OpenVR.System;
-            if (system != null) {
-                // var valid = system.GetControllerStateWithPose(null, 0, ref state, ref pose);
-                // system.GetDeviceToAbsoluteTrackingPose();
-                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-                leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
-                leftController.TryGetFeatureValue(CommonUsages.devicePosition, out lc);
-                Log.Info($"rc: {rc}");
-                Log.Info($"lc: {lc}");
-                Log.Info("MADE IT");
-            }
+            Log.Info("OpenVR Background Process Initialized");
 
             // First let's define our item
             myItemDef = ScriptableObject.CreateInstance<ItemDef>();
@@ -149,12 +125,17 @@ namespace VRJesterMod
         }
 
         // The Update() method is run on every frame of the game.
-        private void Update()
-        {
+        private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
                 Log.Info($"rightController position: {rc}");
+                var system = OpenVR.System;
+                if (system != null) {
+                    Log.Info("MADE IT");
+                } else {
+                    Log.Info("NU MADE IT");
+                }
             }
             // This if statement checks if the player has currently pressed F2.
             if (Input.GetKeyDown(KeyCode.F2)) {
