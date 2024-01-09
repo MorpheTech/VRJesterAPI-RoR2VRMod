@@ -19,26 +19,13 @@ namespace VRJesterMod {
     [BepInDependency(LanguageAPI.PluginGUID)]
 
     // This attribute is required, and lists metadata for your plugin.
-    [BepInPlugin(PluginGUID, PluginName, PluginVersion)]
-
+    [BepInPlugin("com.cali.vrjester", "VRJesterMod", "1.0.0")]
     public class VRJesterMod : BaseUnityPlugin {
-        // The Plugin GUID should be a unique ID for this plugin,
-        // which is human readable (as it is used in places like the config).
-        // If we see this PluginGUID as it is on thunderstore,
-        // we will deprecate this mod.
         // Change the PluginAuthor and the PluginName !
-        public const string PluginGUID = "com.cali.vrjester";
         public const string PluginAuthor = "Caliburs";
-        public const string PluginName = "VRJesterMod";
-        public const string PluginVersion = "1.0.0";
 
         // We need our item definition to persist through our functions, and therefore make it a class field.
         private static ItemDef myItemDef;
-
-        Vector3 rc;
-        Vector3 lc;
-        InputDevice rightController;
-        InputDevice leftController;
 
         // The Awake() method is run at the very start when the game is initialized.
         public void Awake()
@@ -127,6 +114,9 @@ namespace VRJesterMod {
         // The Update() method is run on every frame of the game.
         private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
+                if (this.GetComponent<TriggerEventHandler>() == null) {
+                    gameObject.AddComponent<TriggerEventHandler>();
+                }
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
                 Log.Info($"rightController position: {rc}");
