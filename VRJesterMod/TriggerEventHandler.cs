@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.XR;
-using Valve.VR;
+
 
 namespace VRJesterMod {
     public class TriggerEventHandler : MonoBehaviour {

@@ -113,20 +113,6 @@ namespace VRJesterMod {
 
         // The Update() method is run on every frame of the game.
         private void Update() {
-            if (Input.GetKeyDown(KeyCode.G)) {
-                if (this.GetComponent<TriggerEventHandler>() == null) {
-                    gameObject.AddComponent<TriggerEventHandler>();
-                }
-                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
-                Log.Info($"rightController position: {rc}");
-                var system = OpenVR.System;
-                if (system != null) {
-                    Log.Info("MADE IT");
-                } else {
-                    Log.Info("NU MADE IT");
-                }
-            }
             // This if statement checks if the player has currently pressed F2.
             if (Input.GetKeyDown(KeyCode.F2)) {
                 // Get the player body to use a position:
