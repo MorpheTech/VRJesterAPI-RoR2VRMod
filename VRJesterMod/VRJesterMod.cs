@@ -3,11 +3,11 @@ using R2API;
 using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-using UnityEngine.XR;
 using Valve.VR;
 
 
-namespace VRJesterMod {
+namespace VRJesterMod
+{
     // This attribute specifies that we have a dependency on a given BepInEx Plugin,
     // We need the R2API ItemAPI dependency because we are using for adding our item to the game.
     // You don't need this if you're not using R2API in your plugin,
@@ -28,8 +28,7 @@ namespace VRJesterMod {
         private static ItemDef myItemDef;
 
         // The Awake() method is run at the very start when the game is initialized.
-        public void Awake()
-        {
+        public void Awake() {
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
 
@@ -86,8 +85,7 @@ namespace VRJesterMod {
             GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
         }
 
-        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report)
-        {
+        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report) {
             // If a character was killed by the world, we shouldn't do anything.
             if (!report.attacker || !report.attackerBody)
             {
