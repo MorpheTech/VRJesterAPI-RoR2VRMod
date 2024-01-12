@@ -4,10 +4,12 @@ using RoR2;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using Valve.VR;
+using System.IO;
+using System.Collections.Generic;
+using UnityEngine.XR;
 
 
-namespace VRJesterMod
-{
+namespace VRJester {
     // This attribute specifies that we have a dependency on a given BepInEx Plugin,
     // We need the R2API ItemAPI dependency because we are using for adding our item to the game.
     // You don't need this if you're not using R2API in your plugin,
@@ -21,10 +23,10 @@ namespace VRJesterMod
     // This attribute is required, and lists metadata for your plugin.
     [BepInPlugin("com.cali.vrjester", "VRJesterMod", "1.0.0")]
     public class VRJesterMod : BaseUnityPlugin {
-        // Change the PluginAuthor and the PluginName !
         public const string PluginAuthor = "Caliburs";
+        public static CVRSystem VR_SYSTEM = null;
+        public static bool VR_LOADED = false;
 
-        // We need our item definition to persist through our functions, and therefore make it a class field.
         private static ItemDef myItemDef;
 
         // The Awake() method is run at the very start when the game is initialized.
@@ -32,11 +34,28 @@ namespace VRJesterMod
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
 
-            EVRInitError eError = EVRInitError.None;
-            OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
-            Log.Info("OpenVR Background Process Initialized");
-            gameObject.AddComponent(typeof(TriggerEventHandler));
+            // Init our VR Background Application
+            List<XRDisplaySubsystem> displaySubsystems = [];
+            SubsystemManager.GetInstances<XRDisplaySubsystem>(displaySubsystems);
+            foreach (var subsystem in displaySubsystems)
+                if (subsystem.running)
+                    VR_LOADED = true;
+            if (VR_LOADED) { 
+                EVRInitError eError = EVRInitError.None;
+                CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
+                Log.Info("OpenVR Background Process Initialized...");
+                Log.Info(VR_SYSTEM.IsInputAvailable());
+            } else {
+                Log.Info("Running in Non-VR Mode...");
+            }
 
+            // Init setup for the rest of the mod
+            gameObject.AddComponent(typeof(GestureHandler));
+            SetupConfig();
+            SetupClient();
+
+            // Sample code to be removed eventually
+            {
             // First let's define our item
             myItemDef = ScriptableObject.CreateInstance<ItemDef>();
 
@@ -83,7 +102,22 @@ namespace VRJesterMod
 
             // But now we have defined an item, but it doesn't do anything yet. So we'll need to define that ourselves.
             GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+            }
         }
+
+        private static void SetupConfig() {
+			Log.Info("Setting up config files...");
+			if (!File.Exists(Constants.CONFIG_PATH)) {
+				VRJester.Config.WriteConfig();
+			}
+			if (!File.Exists(Constants.GESTURE_STORE_PATH)) {
+				VRJester.Config.WriteGestureStore();
+			}
+		}
+
+		private static void SetupClient() {
+			// Create setup for assigning gestures to keys
+		}
 
         private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report) {
             // If a character was killed by the world, we shouldn't do anything.

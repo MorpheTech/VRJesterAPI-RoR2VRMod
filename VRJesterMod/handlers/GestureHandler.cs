@@ -1,29 +1,49 @@
 using UnityEngine;
 using UnityEngine.XR;
 using Valve.VR;
+using VRJester.Utils.VRData;
 
 
-namespace VRJesterMod {
-    public class TriggerEventHandler : MonoBehaviour {
+namespace VRJester {
+    public class GestureHandler : MonoBehaviour {
+        public static Config config = Config.ReadConfig();
+        private static VRDataState vrDataState;
+        //  private static Gesture gesture;
 
         Vector3 rc;
         Vector3 lc;
         InputDevice rightController;
         InputDevice leftController;
 
+
         // The Update() method is run on every frame of the game.
         private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
-                if (this.GetComponent<TriggerEventHandler>() == null) {
-                    gameObject.AddComponent<TriggerEventHandler>();
-                }
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
                 leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
                 leftController.TryGetFeatureValue(CommonUsages.devicePosition, out lc);
+                Log.Info($"rightController: {rightController}");
                 Log.Info($"rightController position: {rc}");
                 // Log.Info($"leftController position: {lc}");
+                HandleNonVrGesture();
             }
+            if (VRJesterMod.VR_LOADED) {
+                HandleVrGesture();
+            }
+        }
+
+        private static void HandleVrGesture() {
+            vrDataState = new VRDataState();
+            // if (gesture == null) { // For initial tick from trigger
+            //     gesture = new Gesture(vrDataRoomPre);
+            // } else {
+            //     gesture.track(vrDataRoomPre);
+            // }
+        }
+
+        private static void HandleNonVrGesture() {
+            config = Config.ReadConfig();
         }
 
         private void OnNewPoses(TrackedDevicePose_t[] poses) {
