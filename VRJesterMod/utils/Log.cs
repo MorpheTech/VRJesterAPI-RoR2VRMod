@@ -1,6 +1,7 @@
 ﻿using BepInEx.Logging;
 
 namespace VRJester {
+
     internal static class Log {
         private static ManualLogSource _logSource;
 

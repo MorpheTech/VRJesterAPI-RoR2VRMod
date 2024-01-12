@@ -3,6 +3,7 @@ using UnityEngine;
 
 
 namespace VRJester.Utils {
+
     public class Calcs {
 		// Class that holds mathematical functions
 

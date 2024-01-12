@@ -4,7 +4,8 @@ using UnityEngine.XR;
 
 
 namespace VRJester.Utils.VRData {
-    public struct Pose(Vector3 position, Quaternion direction) {
+
+    public struct VRPose(Vector3 position, Quaternion direction) {
         public Vector3 Position { get; set; } = position;
         public Quaternion Direction { get; set; } = direction;
 		public override readonly string ToString() => $"Pose[ position: {Position} | rotation: {Direction} ]";
@@ -13,12 +14,12 @@ namespace VRJester.Utils.VRData {
 	public class VRDataState {
 		// Class for encapsulating VRData of devices
 
-		private readonly Pose hmd, rc, lc;
+		private readonly VRPose hmd, rc, lc;
 
 		public VRDataState() {
-			hmd = GetPose(VRDevice.HEAD_MOUNTED_DISPLAY);
-			rc = GetPose(VRDevice.RIGHT_CONTROLLER);
-			lc = GetPose(VRDevice.LEFT_CONTROLLER);
+			hmd = SetVRPose(VRDevice.HEAD_MOUNTED_DISPLAY);
+			rc = SetVRPose(VRDevice.RIGHT_CONTROLLER);
+			lc = SetVRPose(VRDevice.LEFT_CONTROLLER);
 		}
 
 		public override string ToString() {
@@ -28,7 +29,7 @@ namespace VRJester.Utils.VRData {
 			"\r\n\t lc: " + lc;
 		}
 
-		public Pose GetPose(VRDevice vrDevice) {
+		public VRPose SetVRPose(VRDevice vrDevice) {
 			XRNode xrNode;
 			switch (vrDevice) {
 				case VRDevice.HEAD_MOUNTED_DISPLAY:
@@ -48,19 +49,39 @@ namespace VRJester.Utils.VRData {
 			InputDevice inputDevice = InputDevices.GetDeviceAtXRNode(xrNode);
 			inputDevice.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 pos);
 			inputDevice.TryGetFeatureValue(CommonUsages.deviceRotation, out Quaternion dir);
-			return new Pose(pos, dir);
+			return new VRPose(pos, dir);
 		}
 
-		public Pose Hmd {
+		public VRPose Hmd {
 			get { return hmd; }
 		}
 
-		public Pose Rc {
+		public VRPose Rc {
 			get { return rc; }
 		}
 
-		public Pose Lc {
+		public VRPose Lc {
 			get { return lc; }
+		}
+
+		public static VRPose GetVRPose(VRDataState vrDataState, VRDevice vrDevice) {
+			VRPose ret;
+			switch (vrDevice) {
+				case VRDevice.HEAD_MOUNTED_DISPLAY:
+					ret = vrDataState.hmd;
+					break;
+				case VRDevice.RIGHT_CONTROLLER:
+					ret = vrDataState.rc;
+					break;
+				case VRDevice.LEFT_CONTROLLER:
+					ret = vrDataState.lc;
+					break;
+				default:
+					Log.Error("VRDevice not yet supported!");
+					ret = new VRPose();
+					break;
+			}
+			return ret;
 		}
 	}
 }

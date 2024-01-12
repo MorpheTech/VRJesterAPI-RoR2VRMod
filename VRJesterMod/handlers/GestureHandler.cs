@@ -5,27 +5,21 @@ using VRJester.Utils.VRData;
 
 
 namespace VRJester {
+
     public class GestureHandler : MonoBehaviour {
         public static Config config = Config.ReadConfig();
         private static VRDataState vrDataState;
-        //  private static Gesture gesture;
+        // private static Gesture gesture;
+        // public static Gestures gestures = new Gestures(config, Constants.GESTURE_STORE_PATH);
 
-        Vector3 rc;
-        Vector3 lc;
-        InputDevice rightController;
-        InputDevice leftController;
-
+        InputDevice rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
         // The Update() method is run on every frame of the game.
         private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
-                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
-                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out rc);
-                leftController = InputDevices.GetDeviceAtXRNode(XRNode.LeftHand);
-                leftController.TryGetFeatureValue(CommonUsages.devicePosition, out lc);
+                rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rc);
                 Log.Info($"rightController: {rightController}");
                 Log.Info($"rightController position: {rc}");
-                // Log.Info($"leftController position: {lc}");
                 HandleNonVrGesture();
             }
             if (VRJesterMod.VR_LOADED) {
@@ -36,9 +30,9 @@ namespace VRJester {
         private static void HandleVrGesture() {
             vrDataState = new VRDataState();
             // if (gesture == null) { // For initial tick from trigger
-            //     gesture = new Gesture(vrDataRoomPre);
+            //     gesture = new Gesture(vrDataState);
             // } else {
-            //     gesture.track(vrDataRoomPre);
+            //     gesture.track(vrDataState);
             // }
         }
 
