@@ -27,6 +27,7 @@ namespace VRJester {
         public const string PluginAuthor = "Caliburs";
         public static CVRSystem VR_SYSTEM = null;
         public static bool VR_LOADED = false;
+        public static Dictionary<string, string> KEY_MAPPINGS = [];
 
         private static ItemDef myItemDef;
 

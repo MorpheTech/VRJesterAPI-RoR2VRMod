@@ -30,13 +30,13 @@ namespace VRJester.Core.Radix {
 			double minDegree = 180.0D;
 			Vector3 anyDirection = new Vector3(0,0,0);
 			foreach (GestureComponent gestureComponent in paths.Keys) {
-	//            System.out.println("MATCHES: " + gestureComponent.Matches(transitionPath));
-	//            System.out.println("gestureComponent: " + gestureComponent);
-	//            System.out.println("transitionPath: " + transitionPath);
+	//            Log.Info("MATCHES: " + gestureComponent.Matches(transitionPath));
+	//            Log.Info("gestureComponent: " + gestureComponent);
+	//            Log.Info("transitionPath: " + transitionPath);
 				if (gestureComponent.Matches(transitionPath)) {
 					MetaData gestureMetaData = new(gestureComponent.ElapsedTime, gestureComponent.Speed, gestureComponent.Direction, gestureComponent.DevicesInProximity);
-	//                System.out.println("HERE: " + gestureMetaData.IsClosestFit(maxTime, maxSpeed, minDegree, transitionPath.Direction));
-	//                System.out.println("minDegree: " + minDegree);
+	//                Log.Info("HERE: " + gestureMetaData.IsClosestFit(maxTime, maxSpeed, minDegree, transitionPath.Direction));
+	//                Log.Info("minDegree: " + minDegree);
 					if (gestureMetaData.IsClosestFit(maxTime, maxSpeed, minDegree, transitionPath.Direction)) {
 						maxTime = gestureComponent.ElapsedTime;
 						maxSpeed = gestureComponent.Speed;
@@ -44,7 +44,7 @@ namespace VRJester.Core.Radix {
 							minDegree = Calcs.GetAngle3D(gestureComponent.Direction, transitionPath.Direction);
 						}
 						newTransition = paths[gestureComponent];
-	//                    System.out.println("NEW minDegree: " + minDegree);
+	//                    Log.Info("NEW minDegree: " + minDegree);
 					}
 				}
 			}
