@@ -44,44 +44,44 @@ namespace VRJester {
             }
 
             // If a gesture is recognized, wait for the next interval to see if another gesture is recognized
-					Dictionary<string, string> recognizedGesture = recognition.Recognize(gesture);
-					if (sleep != 0) { // Execute every tick
-						if (recognizedGesture.Count != 0) {
-							Dictionary<string, string> gestureAction = config.GESTURE_KEY_MAPPINGS[recognizedGesture["gestureName"]];
-							if (!previousGesture.Equals(recognizedGesture["gestureName"])) { // Initial gesture recognition
-								previousGesture = recognizedGesture["gestureName"];
-                                // TRIGGER EVENT
-                                Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
-								sleep = DELAY; // Reset ticker to extend listening time
-								limiter = config.MAX_LISTENING_TIME; // Reset limiter
-							}
-							else { // Handle gesture recognition after initial if gesture hasn't changed (hold down key)
-								if (gestureAction != null && gestureAction["KEY_ACTION"].Equals("hold")) {
-									// TRIGGER EVENT
-                                    Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
-									sleep = DELAY; // Reset ticker to extend listening time
-									limiter = config.MAX_LISTENING_TIME; // Reset limiter
-								}
-							}
-						}
-					}
-					else { // Reset trigger at the end of the delay interval
-	//                    Log.Info("JESTER DONE LISTENING");
-						sleep = DELAY;
-						if (recognizedGesture.Count != 0) { // Final gesture recognition check after delay interval reset
-							if (!previousGesture.Equals(recognizedGesture["gestureName"])) {
-                                Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
-								if (config.DEBUG_MODE)
-									Log.Debug("RECOGNIZED: " + recognizedGesture["gestureName"]);
-								limiter = config.MAX_LISTENING_TIME;
-								ResetJesterListener();
-							}
-						}
-					}
-					if (limiter == 0) {
-						ResetJesterListener();
-					}
-					sleep--;
+            Dictionary<string, string> recognizedGesture = recognition.Recognize(gesture);
+            if (sleep != 0) { // Execute every tick
+                if (recognizedGesture.Count != 0) {
+                    Dictionary<string, string> gestureAction = config.GESTURE_KEY_MAPPINGS[recognizedGesture["gestureName"]];
+                    if (!previousGesture.Equals(recognizedGesture["gestureName"])) { // Initial gesture recognition
+                        previousGesture = recognizedGesture["gestureName"];
+                        // TRIGGER EVENT
+                        Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
+                        sleep = DELAY; // Reset ticker to extend listening time
+                        limiter = config.MAX_LISTENING_TIME; // Reset limiter
+                    }
+                    else { // Handle gesture recognition after initial if gesture hasn't changed (hold down key)
+                        if (gestureAction != null && gestureAction["KEY_ACTION"].Equals("hold")) {
+                            // TRIGGER EVENT
+                            Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
+                            sleep = DELAY; // Reset ticker to extend listening time
+                            limiter = config.MAX_LISTENING_TIME; // Reset limiter
+                        }
+                    }
+                }
+            }
+            else { // Reset trigger at the end of the delay interval
+//                    Log.Info("JESTER DONE LISTENING");
+                sleep = DELAY;
+                if (recognizedGesture.Count != 0) { // Final gesture recognition check after delay interval reset
+                    if (!previousGesture.Equals(recognizedGesture["gestureName"])) {
+                        Log.Info("RECOGNIZED GESTURE EZ GG ->" + recognizedGesture["gestureName"]);
+                        if (config.DEBUG_MODE)
+                            Log.Debug("RECOGNIZED: " + recognizedGesture["gestureName"]);
+                        limiter = config.MAX_LISTENING_TIME;
+                        ResetJesterListener();
+                    }
+                }
+            }
+            if (limiter == 0) {
+                ResetJesterListener();
+            }
+            sleep--;
         }
 
         private static void HandleNonVrGesture() {
