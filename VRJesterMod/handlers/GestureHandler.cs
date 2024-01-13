@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.XR;
 using Valve.VR;
+using VRJester.Core;
 using VRJester.Utils.VRData;
 
 
@@ -9,8 +10,8 @@ namespace VRJester {
     public class GestureHandler : MonoBehaviour {
         public static Config config = Config.ReadConfig();
         private static VRDataState vrDataState;
-        // private static Gesture gesture;
-        // public static Gestures gestures = new Gestures(config, Constants.GESTURE_STORE_PATH);
+        private static Gesture gesture;
+        public static Gestures gestures = new(config, Constants.GESTURE_STORE_PATH);
 
         InputDevice rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
 
@@ -29,11 +30,11 @@ namespace VRJester {
 
         private static void HandleVrGesture() {
             vrDataState = new VRDataState();
-            // if (gesture == null) { // For initial tick from trigger
-            //     gesture = new Gesture(vrDataState);
-            // } else {
-            //     gesture.track(vrDataState);
-            // }
+            if (gesture == null) { // For initial tick from trigger
+                gesture = new Gesture(vrDataState);
+            } else {
+                gesture.Track(vrDataState);
+            }
         }
 
         private static void HandleNonVrGesture() {

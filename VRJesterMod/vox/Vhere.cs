@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using VRJester.Gesture;
+using VRJester.Core;
 using VRJester.Utils.VRData;
+
 
 namespace VRJester.Vox {
 
@@ -30,7 +31,7 @@ namespace VRJester.Vox {
 			previousId = id; // Initialize soon to be previous ID
 			this.vrDevice = vrDevice; // Initialize VRDevice name
 			faceDirection = centroidPose.Direction; // Initialize facing angle of user
-			gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, centroidPose, faceDirection.eulerAngles);
+			gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, centroidPose, Vector3.Normalize(faceDirection.eulerAngles));
 			// Initialize Center of Vhere
 			UpdateVherePosition(centroidPose.Position);
 		}
@@ -52,7 +53,7 @@ namespace VRJester.Vox {
 			if (HasPoint(pos)) {
 				IDictionary<string, int> devicesInProximity = gestureTrace.DevicesInProximity;
 				devicesInProximity.TryGetValue(vrDevice.ToString(), out int times);
-				gestureTrace.updateDeviceInProximity(vrDevice.ToString(), times);
+				gestureTrace.UpdateDeviceInProximity(vrDevice.ToString(), times);
 			}
 		}
 
@@ -75,7 +76,7 @@ namespace VRJester.Vox {
 			}
 			else
 			{
-				gestureTrace.addPose(pose); // Constantly update the current Trace
+				gestureTrace.AddPose(pose); // Constantly update the current Trace
 			}
 			return pose;
 		}
@@ -91,7 +92,7 @@ namespace VRJester.Vox {
 
 		// Begin with a new Trace object
 		public GestureTrace BeginTrace(VRPose pose) {
-			gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, pose, faceDirection.eulerAngles);
+			gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, pose, Vector3.Normalize(faceDirection.eulerAngles));
 			return gestureTrace;
 		}
 
