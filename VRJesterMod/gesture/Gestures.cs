@@ -28,8 +28,8 @@ namespace VRJester.Core {
 		
 		public Config config = config;
 
-        // Read in gestures from gesture store file and return GestureStore object
-        public GestureStore Read() {
+	        // Read in gestures from gesture store file and return GestureStore object
+	        public GestureStore Read() {
 			try {
 				StringBuilder sb = new();
 				StreamReader myReader = new(gestureStorePath);
@@ -119,10 +119,10 @@ namespace VRJester.Core {
 			WriteGestures(Constants.LC, lcGestures.root, []);
 			try {
 				using StreamWriter sw = new(@gestureStorePath);
-                using JsonTextWriter jw = new(sw);
-                jw.Formatting = Formatting.Indented;
-                JsonSerializer serializer = new();
-                serializer.Serialize(jw, gestureStore);
+		                using JsonTextWriter jw = new(sw);
+		                jw.Formatting = Formatting.Indented;
+		                JsonSerializer serializer = new();
+		                serializer.Serialize(jw, gestureStore);
 			} catch (IOException e) {
 				Log.Error("An error occurred writing config json!");
 				Log.Error(e.StackTrace);
