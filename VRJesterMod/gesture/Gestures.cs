@@ -9,24 +9,24 @@ using VRJester.Core.Radix;
 namespace VRJester.Core {
 
 	public class Gestures(Config config, string gestureStorePath) {
-	// Class for storing the gestures in a namespace for each VRDevice
-	// The gesture store, stores gestures for reading and writing to/from JSON
-	// The namespace determines what's recognized as a complete gesture
-	// The mappings determine which devices recognize which gestures
-	// The radix trees store the actual gestures
-	
-	private readonly string gestureStorePath = gestureStorePath;
-	public readonly GestureStore gestureStore = new();
-	public Dictionary<string, string> gestureNameSpace = [];
-	public Dictionary<int, string> hmdGestureMapping = [];
-	public Dictionary<int, string> rcGestureMapping = [];
-	public Dictionary<int, string> lcGestureMapping = [];
-	public RadixTree hmdGestures = new(Constants.HMD);
-	public RadixTree rcGestures = new(Constants.RC);
-	public RadixTree lcGestures = new(Constants.LC);
-	public Dictionary<string, IList<string>> eitherDeviceGestures = [];
-	
-	public Config config = config;
+		// Class for storing the gestures in a namespace for each VRDevice
+		// The gesture store, stores gestures for reading and writing to/from JSON
+		// The namespace determines what's recognized as a complete gesture
+		// The mappings determine which devices recognize which gestures
+		// The radix trees store the actual gestures
+		
+		private readonly string gestureStorePath = gestureStorePath;
+		public readonly GestureStore gestureStore = new();
+		public Dictionary<string, string> gestureNameSpace = [];
+		public Dictionary<int, string> hmdGestureMapping = [];
+		public Dictionary<int, string> rcGestureMapping = [];
+		public Dictionary<int, string> lcGestureMapping = [];
+		public RadixTree hmdGestures = new(Constants.HMD);
+		public RadixTree rcGestures = new(Constants.RC);
+		public RadixTree lcGestures = new(Constants.LC);
+		public Dictionary<string, IList<string>> eitherDeviceGestures = [];
+		
+		public Config config = config;
 
         // Read in gestures from gesture store file and return GestureStore object
         public GestureStore Read() {
