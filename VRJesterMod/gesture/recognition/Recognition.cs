@@ -43,12 +43,11 @@ namespace VRJester.Core.Recog {
 				ctx[Constants.LC] = name;
 			}
 	//        FOR DEBUGGING:
-			foreach
-			Log.Info(gesture);
-			Log.Info(foundHmdGesture.HashCode() + " -> foundHmdGesture: " + foundHmdGesture);
-			Log.Info(foundRcGesture.HashCode() + " -> foundRcGesture: " + foundRcGesture);
-			Log.Info(foundLcGesture.HashCode() + " -> foundLcGesture: " + foundLcGesture);
-			Log.Info("RECOGNIZE ID:" + id);
+			// Log.Info(gesture);
+			// Log.Info(foundHmdGesture.HashCode() + " -> foundHmdGesture: " + foundHmdGesture);
+			// Log.Info(foundRcGesture.HashCode() + " -> foundRcGesture: " + foundRcGesture);
+			// Log.Info(foundLcGesture.HashCode() + " -> foundLcGesture: " + foundLcGesture);
+			// Log.Info("RECOGNIZE ID:" + id);
 			gestureName = gestures.gestureNameSpace[id];
 			ctx["gestureName"] = gestureName;
 			return gestureName is not null ? ctx : [];

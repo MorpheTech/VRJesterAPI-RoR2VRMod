@@ -34,9 +34,9 @@ namespace VRJester {
             if (VRJesterMod.VR_LOADED) {
                 if (Input.GetKeyDown(KeyCode.G)) {
                     Log.Info("MADE IT TO HandleVrGesture");
-                    config = Config.ReadConfig();
-                    HandleVrGesture();
                 }
+                config = Config.ReadConfig();
+                HandleVrGesture();
             }
         }
 
