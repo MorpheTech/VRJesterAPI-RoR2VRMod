@@ -6,8 +6,7 @@ using Newtonsoft.Json;
 using VRJester.Core;
 
 
-namespace VRJester
-{
+namespace VRJester {
 
     public class Config {
 		public string RECOGNIZE_ON = Constants.RECOGNIZE_ON;

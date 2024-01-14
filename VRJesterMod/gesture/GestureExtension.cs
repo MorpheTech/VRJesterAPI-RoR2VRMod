@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace VRJester.Core {
 
-    public static class MyExtensions {
+    public static class Extensions {
         public static bool IsEqual(this List<GestureComponent> gesture, List<GestureComponent> otherGesture) {
             bool ret = true;
             if (gesture.Count == otherGesture.Count) {

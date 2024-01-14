@@ -5,7 +5,7 @@ using VRJester.Vox;
 
 namespace VRJester.Core {
 
-	public class Gesture {
+    public class Gesture {
 		// Class that handles compiling the GestureComponent list for each VRDevice
 		// Note: A list of GestureComponent's represents a gesture of an individual VRDevice
 
@@ -19,9 +19,9 @@ namespace VRJester.Core {
 		public Gesture(VRDataState vrDataState) {
 			// Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
 			VRPose hmdOrigin = vrDataState.Hmd, rcOrigin = vrDataState.Rc, lcOrigin = vrDataState.Lc;
-			Vhere hmdVhere = new Vhere(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin, Constants.CONFIG_PATH);
-			Vhere rcVhere = new Vhere(VRDevice.RIGHT_CONTROLLER, rcOrigin, Constants.CONFIG_PATH);
-			Vhere lcVhere = new Vhere(VRDevice.LEFT_CONTROLLER, lcOrigin, Constants.CONFIG_PATH);
+			Vhere hmdVhere = new(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin, Constants.CONFIG_PATH);
+			Vhere rcVhere = new(VRDevice.RIGHT_CONTROLLER, rcOrigin, Constants.CONFIG_PATH);
+			Vhere lcVhere = new(VRDevice.LEFT_CONTROLLER, lcOrigin, Constants.CONFIG_PATH);
 			vhereList.Add(hmdVhere);
 			vhereList.Add(rcVhere);
 			vhereList.Add(lcVhere);
@@ -75,7 +75,7 @@ namespace VRJester.Core {
 		}
 
 		public override string ToString() {
-			return "Gesture:" + "\r\n  hmdGesture: " + hmdGesture + "\r\n  rcGesture: " + rcGesture + "\r\n  lcGesture: " + lcGesture;
+			return "Gesture:" + "\r\n  hmdGesture: " + string.Join(",", hmdGesture) + "\r\n  rcGesture: " + string.Join(",", rcGesture) + "\r\n  lcGesture: " + string.Join(",", lcGesture);
 		}
 
 		// Record the Vox trace of each VRDevice and store the resulting data

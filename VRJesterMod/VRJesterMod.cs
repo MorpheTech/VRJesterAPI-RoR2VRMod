@@ -7,8 +7,7 @@ using System.Collections.Generic;
 using System.Collections;
 
 
-namespace VRJester
-{
+namespace VRJester {
 
     // This attribute specifies that we have a dependency on a given BepInEx Plugin,
     // We need the R2API ItemAPI dependency because we are using for adding our item to the game.

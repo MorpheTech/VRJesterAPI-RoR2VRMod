@@ -74,8 +74,7 @@ namespace VRJester.Vox {
 				gestureTrace.movement = movementDirection;
 				movementDirection = "idle";
 			}
-			else
-			{
+			else {
 				gestureTrace.AddPose(pose); // Constantly update the current Trace
 			}
 			return pose;
