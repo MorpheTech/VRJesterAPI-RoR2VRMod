@@ -13,11 +13,12 @@ namespace VRJester.Core {
 
 		public string voxId; // The Vox ID
 		public string vrDevice; // The VRDevice
-		public string movement = "idle"; // Movement taken to get to Vox
+		public string movement = "idle"; // Movement taken to get to next Vox
+		public string direction = "*"; // The last Direction facing when got to next Vox
 		public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
 		public double speed; // Average speed within Vox (calculated on the fly while idle)
 		public readonly IDictionary<string, int> devicesInProximity = new Dictionary<string, int>(); // Time other VRDevices spent within this Vox
-		private Vector3 direction, front, back, right, left;
+		private Vector3 front, back, right, left;
 		private readonly IList<VRPose> poses = []; // Poses captured within Vox
 
 		public GestureTrace(string voxId, VRDevice vrDevice, VRPose pose, Vector3 faceDirection) {
@@ -53,35 +54,34 @@ namespace VRJester.Core {
 			get {
 				return movement;
 			}
+			set {
+				movement = value;
+			}
 		}
 
-		public void SetMovement(string movement) {
-			this.movement = movement;
-		}
-
-		// Set the movement the VRDevice took to arrive at this current Trace
-		public void SetMovement(Vector3 gestureDirection) {
-			if (gestureDirection.y > 0.85D) {
-				movement = "up";
+		// Set the gesture movement or direction the VRDevice took to arrive at this current Trace
+		public void SetTrajectory(Vector3 gestureVector, ref string gestureDirection) {
+			if (gestureVector.y > 0.85D) {
+				gestureDirection = "up";
 			}
-			else if (gestureDirection.y < -0.85D) {
-				movement = "down";
+			else if (gestureVector.y < -0.85D) {
+				gestureDirection = "down";
 			}
-			else if (GetAngle2D(front, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-				movement = "forward";
+			else if (GetAngle2D(front, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
+				gestureDirection = "forward";
 			}
-			else if (GetAngle2D(back, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-				movement = "back";
+			else if (GetAngle2D(back, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
+				gestureDirection = "back";
 			}
-			else if (GetAngle2D(right, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-				movement = "right";
+			else if (GetAngle2D(right, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
+				gestureDirection = "right";
 			}
-			else if (GetAngle2D(left, gestureDirection) <= Constants.MOVEMENT_DEGREE_SPAN) {
-				movement = "left";
+			else if (GetAngle2D(left, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
+				gestureDirection = "left";
 			}
 			else {
 				Console.WriteLine("NO MOVEMENT RECOGNIZED!");
-				Console.WriteLine("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + GetAngle2D(front, gestureDirection));
+				Console.WriteLine("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + GetAngle2D(front, gestureVector));
 			}
 		}
 
@@ -109,7 +109,7 @@ namespace VRJester.Core {
 			get { return speed; }
 		}
 
-        public Vector3 Direction {
+        public string Direction {
 			get {
 				return direction;
 			}
@@ -137,10 +137,10 @@ namespace VRJester.Core {
 			// Note: After this executes, it is ready to be converted into a GestureComponent
 			Vector3 start = poses[0].Position;
 			Vector3 gestureDirection = Vector3.Normalize(end.Position - start);
-			SetMovement(gestureDirection);
+			SetTrajectory(gestureDirection, ref movement);
+			SetTrajectory(end.Direction.eulerAngles, ref direction);
 			SetSpeed(end.Position);
 			ElapsedTime = NanoTime();
-			Direction = Vector3.Normalize(end.Direction.eulerAngles);
 		}
 
 		// Set all movement directional buckets used to determine movement

@@ -31,6 +31,6 @@ namespace VRJester {
 		public const string RC = "RIGHT_CONTROLLER";
 		public const string LC = "LEFT_CONTROLLER";
 		public const string C2 = "EXTRA_TRACKER";
-		public static IList<string> DEVICES = new List<string> {HMD, RC, LC};
+		public static IList<string> DEVICES = [HMD, RC, LC];
 	}
 }

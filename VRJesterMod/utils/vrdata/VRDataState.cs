@@ -1,9 +1,9 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.XR;
 
 
-namespace VRJester.Utils.VRData {
+namespace VRJester.Utils.VRData
+{
 
     public struct VRPose(Vector3 position, Quaternion direction) {
         public Vector3 Position { get; set; } = position;

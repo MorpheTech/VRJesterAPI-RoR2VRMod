@@ -21,9 +21,9 @@ namespace VRJester.Core {
 		public Dictionary<int, string> hmdGestureMapping = [];
 		public Dictionary<int, string> rcGestureMapping = [];
 		public Dictionary<int, string> lcGestureMapping = [];
-		public RadixTree hmdGestures = new RadixTree(Constants.HMD);
-		public RadixTree rcGestures = new RadixTree(Constants.RC);
-		public RadixTree lcGestures = new RadixTree(Constants.LC);
+		public RadixTree hmdGestures = new(Constants.HMD);
+		public RadixTree rcGestures = new(Constants.RC);
+		public RadixTree lcGestures = new(Constants.LC);
 		public Dictionary<string, IList<string>> eitherDeviceGestures = [];
 
 		public Config config = config;
@@ -62,8 +62,8 @@ namespace VRJester.Core {
 						Store(gesture, gestureName);
 					}
 					catch (NullReferenceException e) {
-						Console.Error.WriteLine(e);
-						Console.WriteLine("SKIPPING LOADING GESTURE: " + gestureName);
+						Log.Error(e);
+						Log.Error("SKIPPING LOADING GESTURE: " + gestureName);
 					}
 				}
 			}
@@ -92,8 +92,8 @@ namespace VRJester.Core {
 		// Store a new gesture into a specified VRDevice namespace
 		public void Store(RadixTree gestureTree, Dictionary<int, string> gestureMapping, List<GestureComponent> gesture, string name) {
 			gestureTree.Insert(gesture);
-			gestureMapping[gesture.GetHashCode()] = name;
-			string id = "" + gesture.GetHashCode();
+			gestureMapping[gesture.HashCode()] = name;
+			string id = "" + gesture.HashCode();
 			gestureNameSpace[id] = name;
 		}
 
@@ -104,10 +104,10 @@ namespace VRJester.Core {
 			Dictionary<int, string> gestureMapping = GetGestureMapping(vrDevice);
 			if (deviceGesture.Count > 0) {
 				gestureTree.Insert(deviceGesture);
-				if (!gestureMapping.ContainsKey(deviceGesture.GetHashCode())) {
-					gestureMapping[deviceGesture.GetHashCode()] = name;
+				if (!gestureMapping.ContainsKey(deviceGesture.HashCode())) {
+					gestureMapping.Add(deviceGesture.HashCode(), name);
 				}
-				id += deviceGesture.GetHashCode();
+				id += deviceGesture.HashCode();
 			}
 			return id;
 		}
@@ -132,8 +132,9 @@ namespace VRJester.Core {
 		// Add each gesture to GestureStore object for writing to gesture store file
 		private void WriteGestures(string vrDevice, Node current, List<GestureComponent> result) {
 			if (current.isGesture) {
-				string gestureName = GetGestureMapping(vrDevice)[result.GetHashCode()];
-				gestureStore.AddGesture(vrDevice, gestureName, result, eitherDeviceGestures[gestureName]);
+				GetGestureMapping(vrDevice).TryGetValue(result.HashCode(), out string gestureName);
+				eitherDeviceGestures.TryGetValue(gestureName, out IList<string> eitherDeviceGesture);
+				gestureStore.AddGesture(vrDevice, gestureName, result, eitherDeviceGesture);
 			}
 			foreach (Branch path in current.paths.Values) {
 				WriteGestures(vrDevice, path.next, GestureComponent.Concat(result, path.gesture));

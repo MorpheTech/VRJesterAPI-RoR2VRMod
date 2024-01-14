@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 
 namespace VRJester.Core.Radix {
@@ -35,7 +36,9 @@ namespace VRJester.Core.Radix {
 
 		private void PrintAllGestures(Node current, List<GestureComponent> result, Dictionary<int, string> gestureMapping) {
 			if (current.isGesture) {
-				Console.WriteLine(gestureMapping[result.GetHashCode()] + ": " + result);
+				gestureMapping.TryGetValue(result.HashCode(), out string gestureName);
+				string components = string.Join(",", result.Select(c => c.ToString()));
+				Log.Info(gestureName + ": " + components);
 			}
 
 			foreach (Branch path in current.paths.Values) {
@@ -53,10 +56,10 @@ namespace VRJester.Core.Radix {
 			int i = 0;
 			foreach (Branch path in current.paths.Values) {
 				if (i == lastValue) {
-					Console.WriteLine(indent.Replace("+", "L") + path.gesture);
+					Log.Info(indent.Replace("+", "L") + path.gesture);
 				}
 				else {
-					Console.WriteLine(indent.Replace("+", "|") + path.gesture);
+					Log.Info(indent.Replace("+", "|") + path.gesture);
 				}
 				int length1 = indent.Length / 2 == 0 ? 4 : indent.Length / 2;
 				int length2 = path.gesture.ToString().Length / 3;
@@ -72,15 +75,18 @@ namespace VRJester.Core.Radix {
 			Node current = root;
 			int currIndex = 0;
 
-			//Iterative approach
+			// Iterative approach
 			while (currIndex < gesture.Count) {
 				GestureComponent transitionGestureComponent = gesture[currIndex];
 				Branch currentPath = current.GetTransition(transitionGestureComponent);
-				//Updated version of the input gesture
-				List<GestureComponent> currGesture = gesture.GetRange(currIndex, gesture.Count);
+				// Log.Debug("gesture:");
+				// foreach (GestureComponent item in gesture) Log.Debug(item);
+				// Log.Debug("currIndex: " + currIndex + " | count: " + (gesture.Count - currIndex));
+				// Updated version of the input gesture
+				List<GestureComponent> currGesture = gesture.GetRange(currIndex, gesture.Count - currIndex);
 
-				//There is no associated edge with the first character of the current string
-				//so simply add the rest of the string and finish
+				// There is no associated edge with the first character of the current string
+				// so simply add the rest of the string and finish
 				if (currentPath == null) {
 					current.paths[transitionGestureComponent] = new Branch(currGesture);
 					break;
@@ -88,14 +94,14 @@ namespace VRJester.Core.Radix {
 
 				int splitIndex = GetFirstMismatchGestureComponent(currGesture, currentPath.gesture);
 				if (splitIndex == NO_MISMATCH) {
-					//The edge and leftover string are the same length
-					//so finish and update the next node as a gesture node
+					// The edge and leftover string are the same length
+					// so finish and update the next node as a gesture node
 					if (currGesture.Count == currentPath.gesture.Count) {
 						currentPath.next.isGesture = true;
 						break;
 					}
 					else if (currGesture.Count < currentPath.gesture.Count) {
-						//The leftover gesture is a prefix to the edge string, so split
+						// The leftover gesture is a prefix to the edge string, so split
 						List<GestureComponent> suffix = currentPath.gesture.GetRange(currGesture.Count - 1, currGesture.Count);
 						currentPath.gesture = currGesture;
 						Node newNext = new Node(true);
@@ -104,13 +110,13 @@ namespace VRJester.Core.Radix {
 						newNext.AddGestureComponent(suffix, afterNewNext);
 						break;
 					}
-					else { //currStr.length() > currentEdge.label.length()
-						//There is leftover string after a perfect match
+					else { // currStr.length() > currentEdge.label.length()
+						// There is leftover string after a perfect match
 						splitIndex = currentPath.gesture.Count;
 					}
 				}
 				else {
-					//The leftover string and edge string differed, so split at point
+					// The leftover string and edge string differed, so split at point
 					List<GestureComponent> suffix = currentPath.gesture.GetRange(splitIndex, currentPath.gesture.Count);
 					currentPath.gesture = currentPath.gesture.GetRange(0, splitIndex);
 					Node prevNext = currentPath.next;
@@ -118,7 +124,7 @@ namespace VRJester.Core.Radix {
 					currentPath.next.AddGestureComponent(suffix, prevNext);
 				}
 
-				//Traverse the tree
+				// Traverse the tree
 				current = currentPath.next;
 				currIndex += splitIndex;
 			}
@@ -129,9 +135,9 @@ namespace VRJester.Core.Radix {
 		}
 
 		private Node Delete(Node current, List<GestureComponent> gesture) {
-			//base case, all the characters have been matched from previous checks
+			// Base case, all the characters have been matched from previous checks
 			if (gesture.Count == 0) {
-				//Has no other edges,
+				// Has no other edges,
 				if (current.paths.Count == 0 && current != root) {
 					return null;
 				}
@@ -141,7 +147,7 @@ namespace VRJester.Core.Radix {
 
 			GestureComponent transitionGestureComponent = gesture[0];
 			Branch path = current.GetTransition(transitionGestureComponent);
-			//Has no edge for the current gesture or the gesture doesn't exist
+			// Has no edge for the current gesture or the gesture doesn't exist
 			if (path == null || !GestureComponent.StartsWith(gesture, path.gesture)) {
 				return current;
 			}
@@ -166,14 +172,15 @@ namespace VRJester.Core.Radix {
 			List<GestureComponent> ret = null;
 			Node current = root;
 			int currIndex = 0;
+
 			while (currIndex < gesture.Count) {
 				GestureComponent currentGestureComponent = gesture[currIndex];
-				Branch path = current.getMatchedPath(currentGestureComponent);
+				Branch path = current.GetMatchedPath(currentGestureComponent);
 				if (path == null) {
 					return null;
 				}
 
-				List<GestureComponent> currSubGesture = gesture.GetRange(currIndex, gesture.Count);
+				List<GestureComponent> currSubGesture = gesture.GetRange(currIndex, gesture.Count - currIndex);
 				if (!GestureComponent.MatchesWith(currSubGesture, path.gesture)) {
 					return null;
 				}

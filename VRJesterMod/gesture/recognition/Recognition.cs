@@ -24,27 +24,31 @@ namespace VRJester.Core.Recog {
         public virtual Dictionary<string, string> Recognize(Gesture gesture) {
 			Dictionary<string, string> ctx = [];
 			string gestureName, id = "";
-			IList<GestureComponent> foundHmdGesture = gestures.hmdGestures.Search(gesture.hmdGesture);
-			IList<GestureComponent> foundRcGesture = gestures.rcGestures.Search(gesture.rcGesture);
-			IList<GestureComponent> foundLcGesture = gestures.lcGestures.Search(gesture.lcGesture);
+			List<GestureComponent> foundHmdGesture = gestures.hmdGestures.Search(gesture.hmdGesture);
+			List<GestureComponent> foundRcGesture = gestures.rcGestures.Search(gesture.rcGesture);
+			List<GestureComponent> foundLcGesture = gestures.lcGestures.Search(gesture.lcGesture);
 			if (foundHmdGesture != null) {
-				id += foundHmdGesture.GetHashCode();
-				ctx[Constants.HMD] = gestures.hmdGestureMapping[foundHmdGesture.GetHashCode()];
+				id += foundHmdGesture.HashCode();
+				gestures.hmdGestureMapping.TryGetValue(foundHmdGesture.HashCode(), out string name);
+				ctx[Constants.HMD] = name;
 			}
 			if (foundRcGesture != null) {
-				id += foundRcGesture.GetHashCode();
-				ctx[Constants.RC] = gestures.rcGestureMapping[foundRcGesture.GetHashCode()];
+				id += foundRcGesture.HashCode();
+				gestures.hmdGestureMapping.TryGetValue(foundRcGesture.HashCode(), out string name);
+				ctx[Constants.RC] = name;
 			}
 			if (foundLcGesture != null) {
-				id += foundLcGesture.GetHashCode();
-				ctx[Constants.LC] = gestures.lcGestureMapping[foundLcGesture.GetHashCode()];
+				id += foundLcGesture.HashCode();
+				gestures.hmdGestureMapping.TryGetValue(foundLcGesture.HashCode(), out string name);
+				ctx[Constants.LC] = name;
 			}
 	//        FOR DEBUGGING:
-	//        Log.Info(gesture);
-	//        Log.Info("foundHmdGesture: " + foundHmdGesture);
-	//        Log.Info("foundRcGesture: " + foundRcGesture);
-	//        Log.Info("foundLcGesture: " + foundLcGesture);
-	//        Log.Info("RECOGNIZE ID:" + id);
+			foreach
+			Log.Info(gesture);
+			Log.Info(foundHmdGesture.HashCode() + " -> foundHmdGesture: " + foundHmdGesture);
+			Log.Info(foundRcGesture.HashCode() + " -> foundRcGesture: " + foundRcGesture);
+			Log.Info(foundLcGesture.HashCode() + " -> foundLcGesture: " + foundLcGesture);
+			Log.Info("RECOGNIZE ID:" + id);
 			gestureName = gestures.gestureNameSpace[id];
 			ctx["gestureName"] = gestureName;
 			return gestureName is not null ? ctx : [];

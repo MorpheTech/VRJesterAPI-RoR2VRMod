@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Rewired.Utils;
 
 
 namespace VRJester.Core {
@@ -13,8 +14,10 @@ namespace VRJester.Core {
 		// Add gesture to GestureStore based on VRDevice
 		public virtual void AddGesture(string vrDevice, string gestureName, List<GestureComponent> gesture, IList<string> validDevices) {
 			GESTURES.TryGetValue(gestureName, out Dictionary<string, List<GestureComponent>> deviceGesture);
+			if (deviceGesture.IsNullOrDestroyed()) // Default the value myself...
+				deviceGesture = [];
 			if (validDevices != null) {
-				vrDevice = string.Concat("|", validDevices);
+				vrDevice = string.Join("|", validDevices);
 				List<GestureComponent> newGesture = GestureComponent.Copy(gesture, new Dictionary<string, string> { { "vrDevice", vrDevice } });
 				deviceGesture[vrDevice] = newGesture;
 				GESTURES[gestureName] = deviceGesture;

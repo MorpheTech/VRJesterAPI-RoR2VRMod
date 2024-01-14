@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using UnityEngine;
-using VRJester.Utils;
 
 
 namespace VRJester.Core.Radix {
@@ -12,7 +10,7 @@ namespace VRJester.Core.Radix {
 		public Dictionary<GestureComponent, Branch> paths = [];
 
         public virtual Branch GetTransition(GestureComponent transitionGestureComponent) {
-			return paths[transitionGestureComponent];
+			return paths.TryGetValue(transitionGestureComponent, out Branch value) ? value : null;
 		}
 
 		public virtual void AddGestureComponent(List<GestureComponent> gestureComponent, Node next) {
@@ -23,26 +21,27 @@ namespace VRJester.Core.Radix {
 			return paths.Count;
 		}
 
-		public virtual Branch getMatchedPath(GestureComponent transitionPath) {
+		public virtual Branch GetMatchedPath(GestureComponent transitionPath) {
 			Branch newTransition = null;
 			long maxTime = 0;
 			double maxSpeed = 0.0;
-			double minDegree = 180.0D;
-			Vector3 anyDirection = new Vector3(0,0,0);
+			// double minDegree = 180.0D;
+			// Vector3 anyDirection = new(0,0,0);
+
 			foreach (GestureComponent gestureComponent in paths.Keys) {
 	//            Log.Info("MATCHES: " + gestureComponent.Matches(transitionPath));
 	//            Log.Info("gestureComponent: " + gestureComponent);
 	//            Log.Info("transitionPath: " + transitionPath);
 				if (gestureComponent.Matches(transitionPath)) {
-					MetaData gestureMetaData = new(gestureComponent.ElapsedTime, gestureComponent.Speed, gestureComponent.Direction, gestureComponent.DevicesInProximity);
+					MetaData gestureMetaData = new(gestureComponent.ElapsedTime, gestureComponent.Speed, gestureComponent.DevicesInProximity);
 	//                Log.Info("HERE: " + gestureMetaData.IsClosestFit(maxTime, maxSpeed, minDegree, transitionPath.Direction));
 	//                Log.Info("minDegree: " + minDegree);
-					if (gestureMetaData.IsClosestFit(maxTime, maxSpeed, minDegree, transitionPath.Direction)) {
+					if (gestureMetaData.IsClosestFit(maxTime, maxSpeed)) {
 						maxTime = gestureComponent.ElapsedTime;
 						maxSpeed = gestureComponent.Speed;
-						if (!gestureComponent.Direction.Equals(anyDirection)) {
-							minDegree = Calcs.GetAngle3D(gestureComponent.Direction, transitionPath.Direction);
-						}
+						// if (!gestureComponent.Direction.Equals(anyDirection)) {
+						// 	minDegree = Calcs.GetAngle3D(gestureComponent.Direction, transitionPath.Direction);
+						// }
 						newTransition = paths[gestureComponent];
 	//                    Log.Info("NEW minDegree: " + minDegree);
 					}

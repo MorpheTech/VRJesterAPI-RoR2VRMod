@@ -1,15 +1,14 @@
 using BepInEx;
 using R2API;
 using RoR2;
-using UnityEngine;
-using UnityEngine.AddressableAssets;
 using Valve.VR;
 using System.IO;
 using System.Collections.Generic;
-using UnityEngine.XR;
+using System.Collections;
 
 
-namespace VRJester {
+namespace VRJester
+{
 
     // This attribute specifies that we have a dependency on a given BepInEx Plugin,
     // We need the R2API ItemAPI dependency because we are using for adding our item to the game.
@@ -29,81 +28,35 @@ namespace VRJester {
         public static bool VR_LOADED = false;
         public static Dictionary<string, string> KEY_MAPPINGS = [];
 
-        private static ItemDef myItemDef;
-
         // The Awake() method is run at the very start when the game is initialized.
         public void Awake() {
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
 
-            // Init our VR Background Application
-            List<XRDisplaySubsystem> displaySubsystems = [];
-            SubsystemManager.GetInstances<XRDisplaySubsystem>(displaySubsystems);
-            foreach (var subsystem in displaySubsystems)
-                if (subsystem.running)
-                    VR_LOADED = true;
-            if (VR_LOADED) { 
-                EVRInitError eError = EVRInitError.None;
-                CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
-                Log.Info("OpenVR Background Process Initialized...");
-                Log.Info(VR_SYSTEM.IsInputAvailable());
-            } else {
-                Log.Info("Running in Non-VR Mode...");
-            }
-
-            // Init setup for the rest of the mod
+            // Init setup for configs and gesture mapping triggers
             gameObject.AddComponent(typeof(GestureHandler));
             SetupConfig();
             SetupClient();
+            
+            RoR2Application.onLoad += () => {
+                StartCoroutine(InitVRJester());
+            };
+        }
 
-            // Sample code to be removed eventually
-            {
-            // First let's define our item
-            myItemDef = ScriptableObject.CreateInstance<ItemDef>();
+        // Check if user is in VR
+        private IEnumerator InitVRJester() {
+            yield return null; yield return null; yield return null;
+            // yield return new WaitForSeconds(3.0F);
 
-            // Language Tokens, explained there https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/Localization/
-            myItemDef.name = "EXAMPLE_CLOAKONKILL_NAME";
-            myItemDef.nameToken = "EXAMPLE_CLOAKONKILL_NAME";
-            myItemDef.pickupToken = "EXAMPLE_CLOAKONKILL_PICKUP";
-            myItemDef.descriptionToken = "EXAMPLE_CLOAKONKILL_DESC";
-            myItemDef.loreToken = "EXAMPLE_CLOAKONKILL_LORE";
-
-            // The tier determines what rarity the item is:
-            // Tier1=white, Tier2=green, Tier3=red, Lunar=Lunar, Boss=yellow,
-            // and finally NoTier is generally used for helper items, like the tonic affliction
-#pragma warning disable Publicizer001 // Accessing a member that was not originally public. Here we ignore this warning because with how this example is setup we are forced to do this
-            myItemDef._itemTierDef = Addressables.LoadAssetAsync<ItemTierDef>("RoR2/Base/Common/Tier2Def.asset").WaitForCompletion();
-#pragma warning restore Publicizer001
-            // Instead of loading the itemtierdef directly, you can also do this like below as a workaround
-            // myItemDef.deprecatedTier = ItemTier.Tier2;
-
-            // You can create your own icons and prefabs through assetbundles, but to keep this boilerplate brief, we'll be using question marks.
-            myItemDef.pickupIconSprite = Addressables.LoadAssetAsync<Sprite>("RoR2/Base/Common/MiscIcons/texMysteryIcon.png").WaitForCompletion();
-            myItemDef.pickupModelPrefab = Addressables.LoadAssetAsync<GameObject>("RoR2/Base/Mystery/PickupMystery.prefab").WaitForCompletion();
-
-            // Can remove determines
-            // if a shrine of order,
-            // or a printer can take this item,
-            // generally true, except for NoTier items.
-            myItemDef.canRemove = true;
-
-            // Hidden means that there will be no pickup notification,
-            // and it won't appear in the inventory at the top of the screen.
-            // This is useful for certain noTier helper items, such as the DrizzlePlayerHelper.
-            myItemDef.hidden = false;
-
-            // You can add your own display rules here,
-            // where the first argument passed are the default display rules:
-            // the ones used when no specific display rules for a character are found.
-            // For this example, we are omitting them,
-            // as they are quite a pain to set up without tools like https://thunderstore.io/package/KingEnderBrine/ItemDisplayPlacementHelper/
-            var displayRules = new ItemDisplayRuleDict(null);
-
-            // Then finally add it to R2API
-            ItemAPI.Add(new CustomItem(myItemDef, displayRules));
-
-            // But now we have defined an item, but it doesn't do anything yet. So we'll need to define that ourselves.
-            GlobalEventManager.onCharacterDeathGlobal += GlobalEventManager_onCharacterDeathGlobal;
+            if (OpenVR.IsHmdPresent())
+                VR_LOADED = true;
+            if (VR_LOADED) {
+                EVRInitError eError = EVRInitError.None;
+                CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
+                Log.Info("OpenVR Background Process Initialized...");
+                VR_SYSTEM.IsDisplayOnDesktop();
+            } else {
+                Log.Info("Running in Non-VR Mode...");
             }
         }
 
@@ -120,44 +73,5 @@ namespace VRJester {
 		private static void SetupClient() {
 			// Create setup for assigning gestures to keys
 		}
-
-        private void GlobalEventManager_onCharacterDeathGlobal(DamageReport report) {
-            // If a character was killed by the world, we shouldn't do anything.
-            if (!report.attacker || !report.attackerBody)
-            {
-                return;
-            }
-
-            var attackerCharacterBody = report.attackerBody;
-
-            // We need an inventory to do check for our item
-            if (attackerCharacterBody.inventory)
-            {
-                // Store the amount of our item we have
-                var garbCount = attackerCharacterBody.inventory.GetItemCount(myItemDef.itemIndex);
-                if (garbCount > 0 &&
-                    // Roll for our 50% chance.
-                    Util.CheckRoll(50, attackerCharacterBody.master))
-                {
-                    // Since we passed all checks, we now give our attacker the cloaked buff.
-                    // Note how we are scaling the buff duration depending on the number of the custom item in our inventory.
-                    attackerCharacterBody.AddTimedBuff(RoR2Content.Buffs.Cloak, 3 + garbCount);
-                }
-            }
-        }
-
-        // The Update() method is run on every frame of the game.
-        private void Update() {
-            // This if statement checks if the player has currently pressed F2.
-            if (Input.GetKeyDown(KeyCode.F2)) {
-                // Get the player body to use a position:
-                var transform = PlayerCharacterMasterController.instances[0].master.GetBodyObject().transform;
-
-                // And then drop our defined item in front of the player.
-
-                Log.Info($"Player pressed F2. Spawning our custom item at coordinates {transform.position}");
-                PickupDropletController.CreatePickupDroplet(PickupCatalog.FindPickupIndex(myItemDef.itemIndex), transform.position, transform.forward * 20f);
-            }
-        }
     }
 }

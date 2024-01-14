@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
-using VRJester.Utils;
 
 
 namespace VRJester.Core {
@@ -14,35 +12,43 @@ namespace VRJester.Core {
 	/// <param name="DevicesInProximity"> = new HashMap<>(); // Other VRDevices within the Vox </param>
 
 	// This record represents a piece of a gesture & its attributes in an iteration of time per VRDevice
-	public class GestureComponent(string VrDevice, string Movement, long ElapsedTime, double Speed, Vector3 Direction, IDictionary<string, int> DevicesInProximity) {
+	public class GestureComponent(string VrDevice, string Movement, long ElapsedTime, double Speed, string Direction, IDictionary<string, int> DevicesInProximity) : System.ICloneable {
         public readonly string VrDevice = VrDevice;
         public readonly string Movement = Movement;
         public readonly long ElapsedTime = ElapsedTime;
         public readonly double Speed = Speed;
-        public readonly Vector3 Direction = Direction;
+        public readonly string Direction = Direction;
         public readonly IDictionary<string, int> DevicesInProximity = DevicesInProximity;
 
+		public object Clone() {
+            return MemberwiseClone();
+        }
+
         public override string ToString() {
-			return string.Format("Path[ {0} | Movement={1} | time={2:D} | Speed={3:F2} | Direction=({4:F2}, {5:F2}, {6:F2})]", VrDevice, Movement, ElapsedTime, Speed, Direction.x, Direction.y, Direction.z);
+			return string.Format("Path[ {0} | Movement={1} | Time={2:D} | Speed={3:F2} | Direction={4}]", VrDevice, Movement, ElapsedTime, Speed, Direction);
 		}
 
 		// Note to self: DO NOT include VrDevice in hashCode, this is how 'either or' functionality works.
 		// This way either VrDevice can recognize the same gesture
 		public override int GetHashCode() {
-			return Movement.GetHashCode() + ElapsedTime.GetHashCode() + Speed.GetHashCode()
-				   + Direction.GetHashCode() + DevicesInProximity.GetHashCode();
+			return Movement.GetHashCode() - ElapsedTime.GetHashCode() - Speed.GetHashCode()
+				   + Direction.GetHashCode() - DevicesInProximity.GetHashCode();
 		}
 
 		// Check if the traced gesture is equal to a stored gesture
 		public override bool Equals(object obj) {
 			if (this == obj) {
 				return true;
-			}
-			else if (obj is not GestureComponent other) {
+			} else if (obj.GetType() != typeof(GestureComponent)) {
 				return false;
-			}
-			else {
-				return VrDevice == other.VrDevice && Movement == other.Movement && object.Equals(ElapsedTime, other.ElapsedTime) && object.Equals(Speed, other.Speed) && object.Equals(Direction, other.Direction) && object.Equals(DevicesInProximity.Keys, other.DevicesInProximity.Keys);
+			} else {
+				GestureComponent other = (GestureComponent) obj;
+				return VrDevice == other.VrDevice &&
+					   Movement == other.Movement &&
+					   Equals(ElapsedTime, other.ElapsedTime) &&
+					   Equals(Speed, other.Speed) &&
+					   Equals(Direction, other.Direction) &&
+					   Equals(DevicesInProximity.Keys, other.DevicesInProximity.Keys);
 			}
 		}
 
@@ -77,12 +83,20 @@ namespace VRJester.Core {
 		}
 
 		// Check if traced gesture has a Direction within angle of the stored gesture (represented as a cone shape)
-		private static bool IsWithinDirection(Vector3 Direction, Vector3 otherDirection) {
-			if (Direction.Equals(new Vector3(0,0,0))) {
+		// private static bool IsWithinDirection(Vector3 Direction, Vector3 otherDirection) {
+		// 	if (Direction.Equals(new Vector3(0,0,0))) {
+		// 		return true;
+		// 	}
+		// 	else {
+		// 		return Calcs.GetAngle3D(Direction, otherDirection) <= Constants.DIRECTION_DEGREE_SPAN;
+		// 	}
+		// }
+
+		private static bool IsWithinDirection(string Direction, string otherDirection) {
+			if (Direction.Equals("*")) {
 				return true;
-			}
-			else {
-				return Calcs.GetAngle3D(Direction, otherDirection) <= Constants.DIRECTION_DEGREE_SPAN;
+			} else {
+				return Direction.Equals(otherDirection);
 			}
 		}
 
@@ -111,11 +125,12 @@ namespace VRJester.Core {
 		public static List<GestureComponent> Copy(List<GestureComponent> gesture, IDictionary<string, string> newValues) {
 			List<GestureComponent> newGesture = [];
 			foreach (GestureComponent gestureComponent in gesture) {
-				string VrDevice = newValues["VrDevice"] is null ? gestureComponent.VrDevice : newValues["VrDevice"];
+				newValues.TryGetValue("VrDevice", out string vrDevice);
+				string VrDevice = vrDevice is null ? gestureComponent.VrDevice : vrDevice;
 				string Movement = gestureComponent.Movement;
 				long ElapsedTime = gestureComponent.ElapsedTime;
 				double Speed = gestureComponent.Speed;
-				Vector3 Direction = gestureComponent.Direction;
+				string Direction = gestureComponent.Direction;
 				IDictionary<string, int> DevicesInProximity = gestureComponent.DevicesInProximity;
 
 				GestureComponent newComponent = new(VrDevice, Movement, ElapsedTime, Speed, Direction, DevicesInProximity);
@@ -124,7 +139,6 @@ namespace VRJester.Core {
 			return newGesture;
 		}
 	}
-
 }
 
 // Dummy class to resolve this error :|

@@ -20,18 +20,23 @@ namespace VRJester {
 		private static int sleep = DELAY;
 		private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
 
-        InputDevice rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
+        InputDevice rightController;
 
         // The Update() method is run on every frame of the game.
         private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
+                rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rc);
                 Log.Info($"rightController: {rightController}");
                 Log.Info($"rightController position: {rc}");
                 HandleNonVrGesture();
             }
             if (VRJesterMod.VR_LOADED) {
-                HandleVrGesture();
+                if (Input.GetKeyDown(KeyCode.G)) {
+                    Log.Info("MADE IT TO HandleVrGesture");
+                    config = Config.ReadConfig();
+                    HandleVrGesture();
+                }
             }
         }
 

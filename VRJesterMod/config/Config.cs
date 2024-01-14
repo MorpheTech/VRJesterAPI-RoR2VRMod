@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Newtonsoft.Json;
-using UnityEngine;
 using VRJester.Core;
 
 
-namespace VRJester {
+namespace VRJester
+{
 
-	public class Config {
+    public class Config {
 		public string RECOGNIZE_ON = Constants.RECOGNIZE_ON;
 		public string GESTURE_NAME = Constants.SAMPLE_GESTURE_NAME;
 		public bool RECORD_MODE = Constants.RECORD_MODE;
@@ -124,7 +124,7 @@ namespace VRJester {
 			List<GestureComponent> rcGesture2 = []; // To reproduce null error, use same rcGesture object
 			List<GestureComponent> rcGesture3 = [];
 			List<GestureComponent> lcGesture = [];
-			Vector3 dir = new(0, 0, 0);
+			string dir = "*";
 			Dictionary<string, int> devices = [];
 
 			GestureComponent gestureComponent1 = new(Constants.RC, "forward", 0, 0.0, dir, devices);
