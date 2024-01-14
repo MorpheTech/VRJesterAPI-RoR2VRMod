@@ -17,8 +17,8 @@ namespace VRJester {
         public static Gestures gestures = new(config, Constants.GESTURE_STORE_PATH);
         private static readonly Recognition recognition = new(gestures);
         private static readonly int DELAY = config.INTERVAL_DELAY; // 0.75 second (15 ticks)
-		private static int sleep = DELAY;
-		private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
+        private static int sleep = DELAY;
+        private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
 
         InputDevice rightController;
 

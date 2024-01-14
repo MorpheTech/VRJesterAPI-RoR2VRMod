@@ -60,17 +60,17 @@ namespace VRJester {
         }
 
         private static void SetupConfig() {
-			Log.Info("Setting up config files...");
-			if (!File.Exists(Constants.CONFIG_PATH)) {
-				VRJester.Config.WriteConfig();
-			}
-			if (!File.Exists(Constants.GESTURE_STORE_PATH)) {
-				VRJester.Config.WriteGestureStore();
-			}
-		}
+            Log.Info("Setting up config files...");
+            if (!File.Exists(Constants.CONFIG_PATH)) {
+                VRJester.Config.WriteConfig();
+            }
+            if (!File.Exists(Constants.GESTURE_STORE_PATH)) {
+                VRJester.Config.WriteGestureStore();
+            }
+        }
 
-		private static void SetupClient() {
-			// Create setup for assigning gestures to keys
-		}
+        private static void SetupClient() {
+            // Create setup for assigning gestures to keys
+        }
     }
 }
