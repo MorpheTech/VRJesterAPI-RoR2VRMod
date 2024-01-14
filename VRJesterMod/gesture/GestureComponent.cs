@@ -82,7 +82,7 @@ namespace VRJester.Core {
             }
         }
 
-        // Check if traced gesture has a Direction within angle of the stored gesture (represented as a cone shape)
+        // Check if traced gesture has a direction within angle of the stored gesture (represented as a cone shape)
         // private static bool IsWithinDirection(Vector3 Direction, Vector3 otherDirection) {
         //     if (Direction.Equals(new Vector3(0,0,0))) {
         //         return true;
@@ -92,6 +92,7 @@ namespace VRJester.Core {
         //     }
         // }
 
+        // Check if traced gesture matches or fulfills condition of stored gesture
         private static bool IsWithinDirection(string Direction, string otherDirection) {
             if (Direction.Equals("*")) {
                 return true;

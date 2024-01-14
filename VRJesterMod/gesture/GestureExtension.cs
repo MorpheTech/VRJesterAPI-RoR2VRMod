@@ -2,6 +2,9 @@ using System.Collections.Generic;
 
 
 namespace VRJester.Core {
+    // Class for extending List<GestureComponent> functionaility
+    // using the following methods instead since overridden methods
+    // aren't inherited by List interface
 
     public static class Extensions {
         public static bool IsEqual(this List<GestureComponent> gesture, List<GestureComponent> otherGesture) {
