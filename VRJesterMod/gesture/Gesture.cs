@@ -19,9 +19,9 @@ namespace VRJester.Core {
         public Gesture(VRDataState vrDataState) {
             // Note: Facing direction is set here, meaning all movements after tracing this Gesture object are relative to that
             VRPose hmdOrigin = vrDataState.Hmd, rcOrigin = vrDataState.Rc, lcOrigin = vrDataState.Lc;
-            Vhere hmdVhere = new(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin, Constants.CONFIG_PATH);
-            Vhere rcVhere = new(VRDevice.RIGHT_CONTROLLER, rcOrigin, Constants.CONFIG_PATH);
-            Vhere lcVhere = new(VRDevice.LEFT_CONTROLLER, lcOrigin, Constants.CONFIG_PATH);
+            Vhere hmdVhere = new(VRDevice.HEAD_MOUNTED_DISPLAY, hmdOrigin, hmdOrigin.Direction, Constants.CONFIG_PATH);
+            Vhere rcVhere = new(VRDevice.RIGHT_CONTROLLER, rcOrigin, hmdOrigin.Direction, Constants.CONFIG_PATH);
+            Vhere lcVhere = new(VRDevice.LEFT_CONTROLLER, lcOrigin, hmdOrigin.Direction, Constants.CONFIG_PATH);
             vhereList.Add(hmdVhere);
             vhereList.Add(rcVhere);
             vhereList.Add(lcVhere);
@@ -46,7 +46,7 @@ namespace VRJester.Core {
                 IList<string> devices = vrDevice.Split('|');
                 if (devices.Contains(Constants.HMD)) {
                     IDictionary<string, string> newValues = new Dictionary<string, string> {
-                        ["vrDevice"] = Constants.HMD
+                        ["VrDevice"] = Constants.HMD
                     };
                     if (devices.Count > 1) {
                         validDevices.Add(Constants.HMD);
@@ -55,7 +55,7 @@ namespace VRJester.Core {
                 }
                 if (devices.Contains(Constants.RC)) {
                     IDictionary<string, string> newValues = new Dictionary<string, string> {
-                        ["vrDevice"] = Constants.RC
+                        ["VrDevice"] = Constants.RC
                     };
                     if (devices.Count > 1) {
                         validDevices.Add(Constants.RC);
@@ -64,7 +64,7 @@ namespace VRJester.Core {
                 }
                 if (devices.Contains(Constants.LC)) {
                     IDictionary<string, string> newValues = new Dictionary<string, string> {
-                        ["vrDevice"] = Constants.LC
+                        ["VrDevice"] = Constants.LC
                     };
                     if (devices.Count > 1) {
                         validDevices.Add(Constants.LC);

@@ -67,6 +67,20 @@ namespace VRJester.Core {
                     }
                 }
             }
+			// FOR DEBUGGING:
+			// Log.Debug("GESTURE NAMESPACE:");
+            // foreach (KeyValuePair<string, string> kvp in gestureNameSpace)
+            //     Log.Debug("ID: " + kvp.Key + " -> " + kvp.Value);
+			// Log.Debug("LOADED GESTURES:");
+			// hmdGestures.PrintAllGestures(hmdGestureMapping);
+			// rcGestures.PrintAllGestures(rcGestureMapping);
+			// lcGestures.PrintAllGestures(lcGestureMapping);
+			// Log.Debug("HMD TREE:");
+			// hmdGestures.PrintAllPaths();
+			// Log.Debug("RC TREE:");
+			// rcGestures.PrintAllPaths();
+			// Log.Debug("LC TREE:");
+			// lcGestures.PrintAllPaths();
         }
 
         // Store a new gesture encompassing all VRDevices

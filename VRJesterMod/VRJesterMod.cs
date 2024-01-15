@@ -5,6 +5,8 @@ using Valve.VR;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.XR;
+using Rewired.Utils;
 
 
 namespace VRJester {
@@ -47,15 +49,18 @@ namespace VRJester {
             yield return null; yield return null; yield return null;
             // yield return new WaitForSeconds(3.0F);
 
-            if (OpenVR.IsHmdPresent())
-                VR_LOADED = true;
-            if (VR_LOADED) {
-                EVRInitError eError = EVRInitError.None;
-                CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
+            EVRInitError eError = EVRInitError.None;
+            CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
+            if (!VR_SYSTEM.IsNullOrDestroyed()) {
                 Log.Info("OpenVR Background Process Initialized...");
-                VR_SYSTEM.IsDisplayOnDesktop();
+                Log.Debug(VR_SYSTEM.IsDisplayOnDesktop());
+                Log.Debug(VR_SYSTEM.IsSteamVRDrawingControllers());
+                Log.Debug(VR_SYSTEM.IsTrackedDeviceConnected(0));
+                Log.Debug(VR_SYSTEM.IsTrackedDeviceConnected(3));
+                VR_LOADED = true;
             } else {
                 Log.Info("Running in Non-VR Mode...");
+                VR_LOADED = false;
             }
         }
 
@@ -69,8 +74,10 @@ namespace VRJester {
             }
         }
 
+        // Create setup for loading & assigning gestures to keys
         private static void SetupClient() {
-            // Create setup for assigning gestures to keys
+            Log.Info("Setting up client...");
+            GestureHandler.gestures.Load();
         }
     }
 }

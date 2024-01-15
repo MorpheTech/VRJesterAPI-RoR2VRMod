@@ -83,7 +83,7 @@ namespace VRJester {
                     }
                 }
             }
-            if (limiter == 0) {
+            if (sleep == 0) {
                 ResetJesterListener();
             }
             sleep--;
@@ -91,6 +91,7 @@ namespace VRJester {
 
         private static void HandleNonVrGesture() {
             config = Config.ReadConfig();
+            gestures.Load();
         }
 
         // Clear and reset gesture listener

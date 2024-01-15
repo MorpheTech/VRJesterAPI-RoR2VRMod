@@ -13,8 +13,8 @@ namespace VRJester.Core {
 
         public string voxId; // The Vox ID
         public string vrDevice; // The VRDevice
-        public string movement = "idle"; // Movement taken to get to next Vox
-        public string direction = "*"; // The last Direction facing when got to next Vox
+        public string movement = "idle"; // Movement taken within this gesture trace
+        public string direction = "*"; // The last Direction of the gesture trace
         public long elapsedTime = 0; // Time spent within Vox in ms (added on the fly while idle)
         public double speed; // Average speed within Vox (calculated on the fly while idle)
         public readonly IDictionary<string, int> devicesInProximity = new Dictionary<string, int>(); // Time other VRDevices spent within this Vox

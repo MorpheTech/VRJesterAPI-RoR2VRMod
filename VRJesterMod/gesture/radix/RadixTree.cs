@@ -56,10 +56,10 @@ namespace VRJester.Core.Radix {
             int i = 0;
             foreach (Branch path in current.paths.Values) {
                 if (i == lastValue) {
-                    Log.Info(indent.Replace("+", "L") + path.gesture);
+                    Log.Info(indent.Replace("+", "L") + string.Join(",", path.gesture));
                 }
                 else {
-                    Log.Info(indent.Replace("+", "|") + path.gesture);
+                    Log.Info(indent.Replace("+", "|") + string.Join(",", path.gesture));
                 }
                 int length1 = indent.Length / 2 == 0 ? 4 : indent.Length / 2;
                 int length2 = path.gesture.ToString().Length / 3;

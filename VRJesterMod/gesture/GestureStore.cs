@@ -18,7 +18,7 @@ namespace VRJester.Core {
                 deviceGesture = [];
             if (validDevices != null) {
                 vrDevice = string.Join("|", validDevices);
-                List<GestureComponent> newGesture = GestureComponent.Copy(gesture, new Dictionary<string, string> { { "vrDevice", vrDevice } });
+                List<GestureComponent> newGesture = GestureComponent.Copy(gesture, new Dictionary<string, string> { { "VrDevice", vrDevice } });
                 deviceGesture[vrDevice] = newGesture;
                 GESTURES[gestureName] = deviceGesture;
             }

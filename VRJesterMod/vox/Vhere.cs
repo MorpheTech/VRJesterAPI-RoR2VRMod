@@ -21,7 +21,7 @@ namespace VRJester.Vox {
         public Quaternion faceDirection;
         public float sphereRadius = Constants.VIRTUAL_SPHERE_RADIUS;
 
-        public Vhere(VRDevice vrDevice, VRPose centroidPose, string configPath) {
+        public Vhere(VRDevice vrDevice, VRPose centroidPose, Quaternion faceDirection, string configPath) {
             config = Config.ReadConfig(configPath); // Override defaults
             if (config.VIRTUAL_SPHERE_RADIUS != sphereRadius) {
                 sphereRadius = config.VIRTUAL_SPHERE_RADIUS;
@@ -30,7 +30,7 @@ namespace VRJester.Vox {
             id = 0; // Initialize Vhere Id
             previousId = id; // Initialize soon to be previous ID
             this.vrDevice = vrDevice; // Initialize VRDevice name
-            faceDirection = centroidPose.Direction; // Initialize facing angle of user
+            this.faceDirection = faceDirection; // Initialize facing trajectory of user
             gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, centroidPose, Vector3.Normalize(faceDirection.eulerAngles));
             // Initialize Center of Vhere
             UpdateVherePosition(centroidPose.Position);
