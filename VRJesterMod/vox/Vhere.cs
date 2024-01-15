@@ -12,7 +12,6 @@ namespace VRJester.Vox {
         // Class that represents a sphere
 
         private readonly VRDevice vrDevice;
-        private readonly IDictionary<string, Vector3> vertices = new Dictionary<string, Vector3>();
         public readonly Config config;
         private int id, previousId;
         private string movementDirection = "idle";
@@ -31,7 +30,7 @@ namespace VRJester.Vox {
             previousId = id; // Initialize soon to be previous ID
             this.vrDevice = vrDevice; // Initialize VRDevice name
             this.faceDirection = faceDirection; // Initialize facing trajectory of user
-            gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, centroidPose, Vector3.Normalize(faceDirection.eulerAngles));
+            gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, centroidPose, faceDirection);
             // Initialize Center of Vhere
             UpdateVherePosition(centroidPose.Position);
         }
@@ -85,14 +84,14 @@ namespace VRJester.Vox {
             centroid = dif;
         }
 
-        public GestureTrace Trace {
-            get { return gestureTrace; }
-        }
-
         // Begin with a new Trace object
         public GestureTrace BeginTrace(VRPose pose) {
-            gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, pose, Vector3.Normalize(faceDirection.eulerAngles));
+            gestureTrace = new GestureTrace(Convert.ToString(id), vrDevice, pose, faceDirection);
             return gestureTrace;
+        }
+
+        public GestureTrace Trace {
+            get { return gestureTrace; }
         }
 
         public int Id {

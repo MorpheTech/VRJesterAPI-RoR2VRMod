@@ -25,7 +25,7 @@ namespace VRJester.Core {
         }
 
         public override string ToString() {
-            return string.Format("Path[ {0} | Movement={1} | Time={2:D} | Speed={3:F2} | Direction={4}]", VrDevice, Movement, ElapsedTime, Speed, Direction);
+            return string.Format("Path[ {0} | Movement={1} | Time={2:D} | Speed={3:F} | Direction={4}]", VrDevice, Movement, ElapsedTime, Speed, Direction);
         }
 
         // Note to self: DO NOT include VrDevice in hashCode, this is how 'either or' functionality works.
@@ -76,8 +76,9 @@ namespace VRJester.Core {
                     }
                 }
                 return true;
-            }
-            catch (System.IndexOutOfRangeException) {
+            } catch (System.IndexOutOfRangeException) {
+                return false;
+            } catch (System.ArgumentOutOfRangeException) {
                 return false;
             }
         }

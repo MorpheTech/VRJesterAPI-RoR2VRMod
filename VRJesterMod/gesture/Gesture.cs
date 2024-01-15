@@ -87,7 +87,7 @@ namespace VRJester.Core {
                     vhere.PreviousId = currentId;
                     GestureTrace gestureTrace = vhere.Trace;
                     gestureTrace.CompleteTrace(currentPoint);
-                    // Log.Info("COMPLETE TRACK: " + vhere.getId() + ": " + gestureTrace);
+                    // Log.Info("COMPLETE TRACE: " + vhere.getId() + ": " + gestureTrace);
                     vhere.BeginTrace(currentPoint);
                     switch (vhere.VrDevice) { // Append a Vhere trace's new GestureComponent object per VRDevice
                         case VRDevice.HEAD_MOUNTED_DISPLAY:

@@ -5,7 +5,6 @@ using Valve.VR;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
-using UnityEngine.XR;
 using Rewired.Utils;
 
 
@@ -53,10 +52,7 @@ namespace VRJester {
             CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
             if (!VR_SYSTEM.IsNullOrDestroyed()) {
                 Log.Info("OpenVR Background Process Initialized...");
-                Log.Debug(VR_SYSTEM.IsDisplayOnDesktop());
-                Log.Debug(VR_SYSTEM.IsSteamVRDrawingControllers());
                 Log.Debug(VR_SYSTEM.IsTrackedDeviceConnected(0));
-                Log.Debug(VR_SYSTEM.IsTrackedDeviceConnected(3));
                 VR_LOADED = true;
             } else {
                 Log.Info("Running in Non-VR Mode...");

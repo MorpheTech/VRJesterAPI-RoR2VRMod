@@ -21,16 +21,16 @@ namespace VRJester.Core {
         private Vector3 front, back, right, left;
         private readonly IList<VRPose> poses = []; // Poses captured within Vox
 
-        public GestureTrace(string voxId, VRDevice vrDevice, VRPose pose, Vector3 faceDirection) {
+        public GestureTrace(string voxId, VRDevice vrDevice, VRPose pose, Quaternion faceDirection) {
             this.voxId = voxId;
             this.vrDevice = vrDevice.ToString();
-            MovementBuckets = faceDirection;
+            MovementBuckets = Vector3.Normalize(faceDirection.eulerAngles);
             ElapsedTime = NanoTime();
             poses.Add(pose);
         }
 
         public override string ToString() {
-            return string.Format("VRDEVICE: {0} | MOVED: {1} | Time Elapsed: {2:D}l", vrDevice, movement, elapsedTime);
+            return string.Format("VRDEVICE: {0} | MOVED: {1} | Time Elapsed: {2:D}ms", vrDevice, movement, elapsedTime);
         }
 
         // Convert Trace object to GestureComponent
@@ -61,10 +61,12 @@ namespace VRJester.Core {
 
         // Set the gesture movement or direction the VRDevice took to arrive at this current Trace
         public void SetTrajectory(Vector3 gestureVector, ref string gestureDirection) {
-            if (gestureVector.y > 0.85D) {
+            Log.Debug("NUU: " + front + " | " + gestureVector);
+            Log.Debug("NUU: " + GetAngle2D(front, gestureVector));
+            if (gestureVector.y > Constants.VERTICAL_DEGREE_SPAN) {
                 gestureDirection = "up";
             }
-            else if (gestureVector.y < -0.85D) {
+            else if (gestureVector.y < -Constants.VERTICAL_DEGREE_SPAN) {
                 gestureDirection = "down";
             }
             else if (GetAngle2D(front, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
@@ -102,7 +104,7 @@ namespace VRJester.Core {
 
         // Set speed in ms
         public void SetSpeed(Vector3 end) {
-            speed = GetMagnitude3D(end - poses[0].Position) / elapsedTime * 1000000;
+            speed = GetMagnitude3D(end - poses[0].Position) / elapsedTime * 1000000000000;
         }
 
         public double Speed {
@@ -136,9 +138,11 @@ namespace VRJester.Core {
         public void CompleteTrace(VRPose end) {
             // Note: After this executes, it is ready to be converted into a GestureComponent
             Vector3 start = poses[0].Position;
-            Vector3 gestureDirection = Vector3.Normalize(end.Position - start);
-            SetTrajectory(gestureDirection, ref movement);
-            SetTrajectory(end.Direction.eulerAngles, ref direction);
+            Vector3 gestureMovement = Vector3.Normalize(end.Position - start);
+            Vector3 gestureDirection = Vector3.Normalize(end.Direction.eulerAngles);
+            Log.Debug("NUU setting gestureMovement:");
+            SetTrajectory(gestureMovement, ref movement);
+            SetTrajectory(gestureDirection, ref direction);
             SetSpeed(end.Position);
             ElapsedTime = NanoTime();
         }
