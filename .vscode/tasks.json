@@ -16,18 +16,21 @@
 			"label": "dotnet: clean"
 		},
 		{
-            "label": "deploy",
-            "command": "Copy-Item",
-            "type": "shell",
-            "args": [
-                "VRJesterMod/bin/Debug/netstandard2.0/VRJesterMod.dll",
-                "C:/Users/jakem/AppData/Roaming/r2modmanPlus-local/RiskOfRain2/profiles/Dev/BepInEx/plugins"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            },
-            "dependsOn":["dotnet: build"]
-        }
+			"label": "deploy",
+			"command": "Copy-Item",
+			"type": "shell",
+			"args": [
+				"VRJesterMod/bin/Debug/netstandard2.0/VRJesterMod.dll",
+				"C:/Users/mosta/AppData/Roaming/Thunderstore Mod Manager/DataFolder/RiskOfRain2/profiles/Default/BepInEx/plugins"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			},
+			"dependsOn": [
+				"dotnet: build"
+			],
+			"problemMatcher": []
+		}
 	]
 }
