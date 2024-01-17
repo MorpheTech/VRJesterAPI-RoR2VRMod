@@ -21,7 +21,7 @@ namespace VRJester {
         public const bool DEBUG_MODE = false;
         public const float VOX_LENGTH = 0.6F;
         public const float VIRTUAL_SPHERE_RADIUS = 0.3F;
-        public const int INTERVAL_DELAY = 50;
+        public const int INTERVAL_DELAY = 20;
         public const int MAX_LISTENING_TIME = 400;
 
         public const double VERTICAL_DEGREE_SPAN = 0.85D;

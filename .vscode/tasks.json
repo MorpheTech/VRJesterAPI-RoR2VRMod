@@ -21,7 +21,7 @@
             "type": "shell",
             "args": [
                 "VRJesterMod/bin/Debug/netstandard2.0/VRJesterMod.dll",
-                "C:/Users/jakem/AppData/Roaming/r2modmanPlus-local/RiskOfRain2/profiles/Dev/BepInEx/plugins"
+                "C:/Users/jakem/AppData/Roaming/r2modmanPlus-local/RiskOfRain2/profiles/Dev/BepInEx/plugins/VRJesterMod"
             ],
             "group": {
                 "kind": "build",
