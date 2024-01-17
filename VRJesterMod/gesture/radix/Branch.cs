@@ -12,7 +12,7 @@ namespace VRJester.Core.Radix {
         public Branch(List<GestureComponent> gesture) : this(gesture, new Node(true)) {}
 
         public override string ToString() {
-            return "Branch[gesture=" + gesture + "]";
+            return "Branch[gesture=" + string.Join(", ", gesture) + "]";
         }
     }
 }

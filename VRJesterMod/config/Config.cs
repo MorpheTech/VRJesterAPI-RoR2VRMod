@@ -123,30 +123,52 @@ namespace VRJester {
             List<GestureComponent> rcGesture2 = []; // To reproduce null error, use same rcGesture object
             List<GestureComponent> rcGesture3 = [];
             List<GestureComponent> lcGesture = [];
+            List<GestureComponent> lcGesture2 = [];
+            List<GestureComponent> lcGesture3 = [];
+            IDictionary<string, int> devices = new Dictionary<string, int>();
             string dir = "*";
-            Dictionary<string, int> devices = [];
 
-            GestureComponent gestureComponent1 = new(Constants.RC, "forward", 0, 0.0, dir, devices);
-            GestureComponent gestureComponent2 = new(Constants.RC, "up", 0, 0.0, dir, devices);
-            GestureComponent gestureComponent3 = new(Constants.RC, "forward", 2000, 0.0, dir, devices);
-            GestureComponent gestureComponent4 = new(Constants.LC, "forward", 2000, 0.0, dir, devices);
+            GestureComponent gestureComponentR1 = new(Constants.RC, "forward", 0, 0.0, dir, devices);
+            GestureComponent gestureComponentR2 = new(Constants.RC, "up", 0, 0.0, dir, devices);
+            GestureComponent gestureComponentR3 = new(Constants.RC, "forward", 2000, 0.0, dir, devices);
+            GestureComponent gestureComponentL1 = new(Constants.LC, "forward", 0, 0.0, dir, devices);
+            GestureComponent gestureComponentL2 = new(Constants.LC, "up", 0, 0.0, dir, devices);
+            GestureComponent gestureComponentL3 = new(Constants.LC, "forward", 2000, 0.0, dir, devices);
 
-            rcGesture.Add(gestureComponent1);
+            rcGesture.Add(gestureComponentR1);
+            lcGesture.Add(gestureComponentL1);
             Gesture strikeGesture = new(hmdGesture, rcGesture, lcGesture);
             strikeGesture.validDevices.Add(Constants.RC);
             strikeGesture.validDevices.Add(Constants.LC);
             GestureHandler.gestures.Store(strikeGesture, "STRIKE");
-            rcGesture2.Add(gestureComponent1);
-            rcGesture2.Add(gestureComponent2);
-            Gesture uppercutGesture = new(hmdGesture, rcGesture2, lcGesture);
+            rcGesture2.Add(gestureComponentR1);
+            rcGesture2.Add(gestureComponentR2);
+            lcGesture2.Add(gestureComponentL1);
+            lcGesture2.Add(gestureComponentL2);
+            Gesture uppercutGesture = new(hmdGesture, rcGesture2, lcGesture2);
             uppercutGesture.validDevices.Add(Constants.RC);
             uppercutGesture.validDevices.Add(Constants.LC);
             GestureHandler.gestures.Store(uppercutGesture, "UPPERCUT");
-            rcGesture3.Add(gestureComponent3);
-            lcGesture.Add(gestureComponent4);
-            Gesture burstGesture = new(hmdGesture, rcGesture3, lcGesture);
+            rcGesture3.Add(gestureComponentR3);
+            lcGesture3.Add(gestureComponentL3);
+            Gesture burstGesture = new(hmdGesture, rcGesture3, lcGesture3);
             GestureHandler.gestures.Store(burstGesture, "BURST");
             GestureHandler.gestures.Write();
+
+            // -- Gesture Recognition Tests --
+            // hmdGesture.Clear(); lcGesture.Clear();
+            // Dictionary<string, string> recognizedGesture = GestureHandler.recognition.Recognize(strikeGesture);
+            // recognizedGesture.TryGetValue("gestureName", out string gestureName);
+            // Log.Info("RECOGNIZED strikeGesture -> " + gestureName);
+
+            // List<GestureComponent> rcGesture4 = [];
+            // GestureComponent gestureComponent = new(Constants.RC, "forward", 43, 2.1, "forward", devices);
+            // rcGesture4.Add(gestureComponent);
+            // Gesture strikeGesture2 = new(hmdGesture, rcGesture4, lcGesture);
+
+            // recognizedGesture = GestureHandler.recognition.Recognize(strikeGesture2);
+            // recognizedGesture.TryGetValue("gestureName", out string gestureName2);
+            // Log.Info("RECOGNIZED strikeGesture2 -> " + gestureName2);
         }
     }
 }

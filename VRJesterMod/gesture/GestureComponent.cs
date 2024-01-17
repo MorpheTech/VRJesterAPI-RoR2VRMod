@@ -15,9 +15,9 @@ namespace VRJester.Core {
     public class GestureComponent(string VrDevice, string Movement, long ElapsedTime, double Speed, string Direction, IDictionary<string, int> DevicesInProximity) : System.ICloneable {
         public readonly string VrDevice = VrDevice;
         public readonly string Movement = Movement;
+        public readonly string Direction = Direction;
         public readonly long ElapsedTime = ElapsedTime;
         public readonly double Speed = Speed;
-        public readonly string Direction = Direction;
         public readonly IDictionary<string, int> DevicesInProximity = DevicesInProximity;
 
         public object Clone() {
@@ -25,14 +25,14 @@ namespace VRJester.Core {
         }
 
         public override string ToString() {
-            return string.Format("Path[ {0} | Movement={1} | Time={2:D} | Speed={3:F} | Direction={4}]", VrDevice, Movement, ElapsedTime, Speed, Direction);
+            return string.Format("GCPath[ {0} | Movement={1} | Direction={2} | Time={3:D} | Speed={4:F}]", VrDevice, Movement, Direction, ElapsedTime, Speed);
         }
 
         // Note to self: DO NOT include VrDevice in hashCode, this is how 'either or' functionality works.
         // This way either VrDevice can recognize the same gesture
         public override int GetHashCode() {
             return Movement.GetHashCode() - ElapsedTime.GetHashCode() - Speed.GetHashCode()
-                   + Direction.GetHashCode() - DevicesInProximity.GetHashCode();
+                   + Direction.GetHashCode() - string.Join("", DevicesInProximity.Keys).GetHashCode();
         }
 
         // Check if the traced gesture is equal to a stored gesture
@@ -45,10 +45,10 @@ namespace VRJester.Core {
                 GestureComponent other = (GestureComponent) obj;
                 return VrDevice == other.VrDevice &&
                        Movement == other.Movement &&
+                       Direction == other.Direction &&
                        Equals(ElapsedTime, other.ElapsedTime) &&
                        Equals(Speed, other.Speed) &&
-                       Equals(Direction, other.Direction) &&
-                       Equals(DevicesInProximity.Keys, other.DevicesInProximity.Keys);
+                       Enumerable.SequenceEqual(DevicesInProximity.Keys, other.DevicesInProximity.Keys);
             }
         }
 
@@ -108,7 +108,7 @@ namespace VRJester.Core {
                 return true;
             }
             else {
-                return object.Equals(devices.Keys, otherDevices.Keys);
+                return Equals(devices.Keys, otherDevices.Keys);
             }
         }
 
@@ -130,9 +130,9 @@ namespace VRJester.Core {
                 newValues.TryGetValue("VrDevice", out string vrDevice);
                 string VrDevice = vrDevice is null ? gestureComponent.VrDevice : vrDevice;
                 string Movement = gestureComponent.Movement;
+                string Direction = gestureComponent.Direction;
                 long ElapsedTime = gestureComponent.ElapsedTime;
                 double Speed = gestureComponent.Speed;
-                string Direction = gestureComponent.Direction;
                 IDictionary<string, int> DevicesInProximity = gestureComponent.DevicesInProximity;
 
                 GestureComponent newComponent = new(VrDevice, Movement, ElapsedTime, Speed, Direction, DevicesInProximity);

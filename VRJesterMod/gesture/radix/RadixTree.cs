@@ -79,10 +79,7 @@ namespace VRJester.Core.Radix {
             while (currIndex < gesture.Count) {
                 GestureComponent transitionGestureComponent = gesture[currIndex];
                 Branch currentPath = current.GetTransition(transitionGestureComponent);
-                // Log.Debug("gesture:");
-                // foreach (GestureComponent item in gesture) Log.Debug(item);
-                // Log.Debug("currIndex: " + currIndex + " | count: " + (gesture.Count - currIndex));
-                // Updated version of the input gesture
+                // Updated increment of the inputted gesture
                 List<GestureComponent> currGesture = gesture.GetRange(currIndex, gesture.Count - currIndex);
 
                 // There is no associated edge with the first character of the current string
@@ -104,7 +101,7 @@ namespace VRJester.Core.Radix {
                         // The leftover gesture is a prefix to the edge string, so split
                         List<GestureComponent> suffix = currentPath.gesture.GetRange(currGesture.Count - 1, currGesture.Count);
                         currentPath.gesture = currGesture;
-                        Node newNext = new Node(true);
+                        Node newNext = new(true);
                         Node afterNewNext = currentPath.next;
                         currentPath.next = newNext;
                         newNext.AddGestureComponent(suffix, afterNewNext);

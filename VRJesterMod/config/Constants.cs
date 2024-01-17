@@ -25,7 +25,7 @@ namespace VRJester {
         public const int MAX_LISTENING_TIME = 400;
 
         public const double VERTICAL_DEGREE_SPAN = 0.85D;
-        public const float MOVEMENT_DEGREE_SPAN = 45.0F;
+        public const float CARDINAL_DEGREE_SPAN = 45.0F;
         public const float DIRECTION_DEGREE_SPAN = 30.0F;
 
         public const string HMD = "HEAD_MOUNTED_DISPLAY";

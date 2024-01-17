@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Rewired.Utils;
 
 
@@ -24,7 +25,7 @@ namespace VRJester.Core.Recog {
         // Recognize the gesture & return its name
         public virtual Dictionary<string, string> Recognize(Gesture gesture) {
             Dictionary<string, string> ctx = [];
-            string gestureName, id = "";
+            string id = "";
             List<GestureComponent> foundHmdGesture = gestures.hmdGestures.Search(gesture.hmdGesture);
             List<GestureComponent> foundRcGesture = gestures.rcGestures.Search(gesture.rcGesture);
             List<GestureComponent> foundLcGesture = gestures.lcGestures.Search(gesture.lcGesture);
@@ -43,19 +44,29 @@ namespace VRJester.Core.Recog {
                 gestures.hmdGestureMapping.TryGetValue(foundLcGesture.HashCode(), out string name);
                 ctx[Constants.LC] = name;
             }
-            // FOR DEBUGGING:
-            Log.Debug("TOTAL GESTURES IN NAMESPACE: " + gestures.gestureNameSpace.Count);
-            foreach (KeyValuePair<string, string> kvp in gestures.gestureNameSpace)
-                Log.Debug("ID: " + kvp.Key + " | NAME: " + kvp.Value);
-            Log.Debug(gesture);
-            Log.Debug(foundHmdGesture.IsNullOrDestroyed() + "| foundHmdGesture: " + foundHmdGesture);
-            Log.Debug(foundRcGesture.IsNullOrDestroyed() + "| foundRcGesture: " + foundRcGesture);
-            Log.Debug(foundLcGesture.IsNullOrDestroyed() + "| foundLcGesture: " + foundLcGesture);
-            Log.Debug("RECOGNIZE ID:" + id);
-            gestures.gestureNameSpace.TryGetValue(id, out string recognizedGesture);
-            gestureName = recognizedGesture;
+            if (GestureHandler.config.DEBUG_MODE)
+                DebugLog(gesture, foundHmdGesture, foundRcGesture, foundLcGesture, id);
+            gestures.gestureNameSpace.TryGetValue(id, out string gestureName);
             ctx["gestureName"] = gestureName;
             return gestureName is not null ? ctx : [];
+        }
+
+        // Method for debugging gesture recognition
+        public virtual void DebugLog(Gesture gesture, List<GestureComponent> foundHmdGesture, List<GestureComponent> foundRcGesture, List<GestureComponent> foundLcGesture, string id) {
+            Log.Debug("TOTAL GESTURES IN NAMESPACE:  " + gestures.gestureNameSpace.Count);
+            foreach (KeyValuePair<string, string> kvp in gestures.gestureNameSpace)
+                Log.Debug("ID: " + kvp.Key + " -> " + kvp.Value);
+
+            if (gesture.hmdGesture.Any() || gesture.rcGesture.Any() || gesture.lcGesture.Any())
+                Log.Debug(gesture);
+            if (!foundHmdGesture.IsNullOrDestroyed())
+                Log.Debug("foundHmdGesture:  " + string.Join(", ", foundHmdGesture));
+            if (!foundRcGesture.IsNullOrDestroyed())
+                Log.Debug("foundRcGesture:  " + string.Join(", ", foundRcGesture));
+            if (!foundLcGesture.IsNullOrDestroyed())
+                Log.Debug("foundLcGesture:  " + string.Join(", ", foundLcGesture));
+            if (id != "")
+                Log.Debug("RECOGNIZE ID:  " + id);
         }
     }
 }

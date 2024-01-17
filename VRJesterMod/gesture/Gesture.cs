@@ -40,7 +40,7 @@ namespace VRJester.Core {
             }
         }
 
-        // Initialize Gesture with already set gestures for each VRDevice
+        // Initialize Gesture with already set gestures for each VRDevice (for loading from GestureStore file)
         public Gesture(Dictionary<string, List<GestureComponent>> gesture) {
             foreach (string vrDevice in gesture.Keys) {
                 IList<string> devices = vrDevice.Split('|');

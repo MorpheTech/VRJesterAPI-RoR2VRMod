@@ -15,15 +15,22 @@ namespace VRJester.Core {
         // The mappings determine which devices recognize which gestures
         // The radix trees store the actual gestures
         
-        private readonly string gestureStorePath = gestureStorePath;
-        public readonly GestureStore gestureStore = new();
-        public Dictionary<string, string> gestureNameSpace = [];
+        private readonly string gestureStorePath = gestureStorePath; // Path to gesture_store.json
+        public readonly GestureStore gestureStore = new(); // For loading and un-loading gesture data
+
+        public Dictionary<string, string> gestureNameSpace = []; // Complete (string) ID -> Gesture namespace
+
+        // Mappings for (int) ID -> Gesture
         public Dictionary<int, string> hmdGestureMapping = [];
         public Dictionary<int, string> rcGestureMapping = [];
         public Dictionary<int, string> lcGestureMapping = [];
+
+        // Actual gesture data storage using search method for recognition
         public RadixTree hmdGestures = new(Constants.HMD);
         public RadixTree rcGestures = new(Constants.RC);
         public RadixTree lcGestures = new(Constants.LC);
+
+        // Mappings for Gesture -> valid device list
         public Dictionary<string, IList<string>> eitherDeviceGestures = [];
         
         public Config config = config;
@@ -52,8 +59,7 @@ namespace VRJester.Core {
 
         // Load up all gestures from gesture store into the radix trees & namespaces
         public void Load() {
-            GestureStore gestureStore = Read();
-            Clear();
+            GestureStore gestureStore = Read(); Clear();
             if (gestureStore != null) {
                 HashSet<string> gestureNames = new(gestureStore.GESTURES.Keys);
                 foreach (string gestureName in gestureNames) { // Iterate through & store each gesture

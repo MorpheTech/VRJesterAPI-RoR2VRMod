@@ -45,14 +45,13 @@ namespace VRJester {
 
         // Check if user is in VR
         private IEnumerator InitVRJester() {
-            yield return null; yield return null; yield return null;
-            // yield return new WaitForSeconds(3.0F);
+            yield return null; // yield return new WaitForSeconds(3.0F);
 
             EVRInitError eError = EVRInitError.None;
             CVRSystem VR_SYSTEM = OpenVR.Init(ref eError, EVRApplicationType.VRApplication_Background);
             if (!VR_SYSTEM.IsNullOrDestroyed()) {
                 Log.Info("OpenVR Background Process Initialized...");
-                Log.Debug(VR_SYSTEM.IsTrackedDeviceConnected(0));
+                Log.Info("Is tracked device connected ?  " + VR_SYSTEM.IsTrackedDeviceConnected(0));
                 VR_LOADED = true;
             } else {
                 Log.Info("Running in Non-VR Mode...");

@@ -21,6 +21,7 @@ namespace VRJester.Core.Radix {
             return paths.Count;
         }
 
+        // This is so that search method can find Branch based on best fitting GestureComponent
         public virtual Branch GetMatchedPath(GestureComponent transitionPath) {
             Branch newTransition = null;
             long maxTime = 0;
@@ -54,5 +55,4 @@ namespace VRJester.Core.Radix {
             return "Node[ isGesture=" + isGesture + ", paths=" + paths + "]";
         }
     }
-
 }

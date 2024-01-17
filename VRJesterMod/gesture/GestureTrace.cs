@@ -21,10 +21,13 @@ namespace VRJester.Core {
         private Vector3 front, back, right, left;
         private readonly IList<VRPose> poses = []; // Poses captured within Vox
 
+        public Quaternion faceDirection;
+
         public GestureTrace(string voxId, VRDevice vrDevice, VRPose pose, Quaternion faceDirection) {
             this.voxId = voxId;
             this.vrDevice = vrDevice.ToString();
-            MovementBuckets = Vector3.Normalize(faceDirection.eulerAngles);
+            this.faceDirection = faceDirection;
+            SetMovementBuckets(faceDirection);
             ElapsedTime = NanoTime();
             poses.Add(pose);
         }
@@ -60,30 +63,29 @@ namespace VRJester.Core {
         }
 
         // Set the gesture movement or direction the VRDevice took to arrive at this current Trace
-        public void SetTrajectory(Vector3 gestureVector, ref string gestureDirection) {
-            Log.Debug("NUU: " + front + " | " + gestureVector);
-            Log.Debug("NUU: " + GetAngle2D(front, gestureVector));
+        public void SetTrajectory(Vector3 gestureVector, ref string gestureTrajectory) {
             if (gestureVector.y > Constants.VERTICAL_DEGREE_SPAN) {
-                gestureDirection = "up";
+                gestureTrajectory = "up";
             }
             else if (gestureVector.y < -Constants.VERTICAL_DEGREE_SPAN) {
-                gestureDirection = "down";
+                gestureTrajectory = "down";
             }
-            else if (GetAngle2D(front, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
-                gestureDirection = "forward";
+            else if (GetAngle2D(front, gestureVector) <= Constants.CARDINAL_DEGREE_SPAN) {
+                gestureTrajectory = "forward";
             }
-            else if (GetAngle2D(back, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
-                gestureDirection = "back";
+            else if (GetAngle2D(back, gestureVector) <= Constants.CARDINAL_DEGREE_SPAN) {
+                gestureTrajectory = "back";
             }
-            else if (GetAngle2D(right, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
-                gestureDirection = "right";
+            else if (GetAngle2D(right, gestureVector) <= Constants.CARDINAL_DEGREE_SPAN) {
+                gestureTrajectory = "right";
             }
-            else if (GetAngle2D(left, gestureVector) <= Constants.MOVEMENT_DEGREE_SPAN) {
-                gestureDirection = "left";
+            else if (GetAngle2D(left, gestureVector) <= Constants.CARDINAL_DEGREE_SPAN) {
+                gestureTrajectory = "left";
             }
             else {
-                Console.WriteLine("NO MOVEMENT RECOGNIZED!");
-                Console.WriteLine("ANGLE BETWEEN FACING DIRECTION AND GESTURE: " + GetAngle2D(front, gestureVector));
+                Log.Warning("NO MOVEMENT RECOGNIZED!");
+                Log.Warning("VECTORS: " + front + " | " + gestureVector);
+                Log.Warning("ANGLE BETWEEN FACING DIRECTION AND VECTOR: " + GetAngle2D(front, gestureVector));
             }
         }
 
@@ -139,8 +141,8 @@ namespace VRJester.Core {
             // Note: After this executes, it is ready to be converted into a GestureComponent
             Vector3 start = poses[0].Position;
             Vector3 gestureMovement = Vector3.Normalize(end.Position - start);
-            Vector3 gestureDirection = Vector3.Normalize(end.Direction.eulerAngles);
-            Log.Debug("NUU setting gestureMovement:");
+            // Vector3 gestureDirection = Vector3.Normalize(end.Direction.eulerAngles);
+            Vector3 gestureDirection = Vector3.Normalize(end.Direction * Vector3.forward);
             SetTrajectory(gestureMovement, ref movement);
             SetTrajectory(gestureDirection, ref direction);
             SetSpeed(end.Position);
@@ -148,13 +150,15 @@ namespace VRJester.Core {
         }
 
         // Set all movement directional buckets used to determine movement
-        private Vector3 MovementBuckets {
-            set {
-                front = value;
-                back = new Vector3(-value.x, value.y, -value.z);
-                right = new Vector3(-value.z, value.y, value.x);
-                left = new Vector3(value.z, value.y, -value.x);
-            }
+        private void SetMovementBuckets(Quaternion faceDirection) {
+            // front = value;
+            // back = new Vector3(-value.x, value.y, -value.z);
+            // right = new Vector3(-value.z, value.y, value.x);
+            // left = new Vector3(value.z, value.y, -value.x);
+            front = faceDirection * Vector3.forward;
+            back = faceDirection * Vector3.back;
+            right = faceDirection * Vector3.right;
+            left = faceDirection * Vector3.left;
         }
 
         private static long NanoTime() {
