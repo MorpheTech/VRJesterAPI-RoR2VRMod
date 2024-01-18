@@ -16,7 +16,7 @@
 			"label": "dotnet: clean"
 		},
 		{
-            "label": "deploy",
+			"label": "deploy",
             "command": "Copy-Item",
             "type": "shell",
             "args": [

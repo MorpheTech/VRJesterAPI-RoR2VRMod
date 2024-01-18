@@ -5,6 +5,16 @@ using Valve.VR;
 using VRJester.Core;
 using VRJester.Core.Recog;
 using VRJester.Utils.VRData;
+using Rewired;
+using Mono.Security.Authenticode;
+using UnityEngine.UIElements;
+using UnityEngine.EventSystems;
+using Rewired.HID;
+using System;
+using IL.RoR2.Achievements.Merc;
+using R2API.Utils;
+using WindowsInput.Native;
+using WindowsInput;
 
 
 namespace VRJester {
@@ -21,16 +31,33 @@ namespace VRJester {
         private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
         private static bool toggled = false;
 
+
         InputDevice rightController;
 
         // The Update() method is run on every frame of the game.
         private void Update() {
-            if (Input.GetKeyDown(KeyCode.G)) {
+            var simu = new InputSimulator();
+            if (Input.GetKeyDown(KeyCode.R)) {
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rc);
                 Log.Info($"rightController: {rightController}");
                 Log.Info($"rightController position: {rc}");
+                Log.Debug("R has been Pressed");
                 HandleNonVrGesture();
+            }
+            if (Input.GetKeyDown(KeyCode.LeftShift)) {
+                Log.Debug("Left Shift has been pressed");
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
+
+                HandleNonVrGesture();
+            }
+            if(Input.GetKeyDown(KeyCode.G)){
+                Log.Debug("G has been pressd");
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_T);
+                // simu.Mouse.LeftButtonClick(); //has a big delay 
+            }
+            if(Input.GetKeyDown(KeyCode.T)){
+                Log.Debug("T has been pressed");
             }
             if (VRJesterMod.VR_LOADED) {
                 if (Input.GetKeyDown(KeyCode.G)) {
@@ -45,6 +72,7 @@ namespace VRJester {
                 if (toggled)
                     HandleVrGesture();
             }
+  
         }
 
         private static void HandleVrGesture() {

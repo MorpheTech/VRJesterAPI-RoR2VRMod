@@ -6,7 +6,7 @@ namespace VRJester {
     public abstract class Constants {
         public const string CONFIG_PATH = "Risk of Rain 2_Data/Config/VRJesterMod.cfg";
         public const string GESTURE_STORE_PATH = "Risk of Rain 2_Data/Config/gesture_store.json";
-        public const string DEV_ROOT_PATH = "C:/Users/jakem/Documents/GitHub";
+        public const string DEV_ROOT_PATH = "";
         public const string DEV_CONFIG_PATH = DEV_ROOT_PATH + "";
         public const string DEV_GESTURE_STORE_PATH = DEV_ROOT_PATH + "";
         public const string DEV_ARCHIVE_PATH = DEV_ROOT_PATH + "";
