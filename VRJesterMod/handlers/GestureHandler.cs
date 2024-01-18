@@ -11,11 +11,10 @@ using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
 using Rewired.HID;
 using System;
-using System.Windows.Forms;
 using IL.RoR2.Achievements.Merc;
 using R2API.Utils;
-// using WindowsInput.Native;
-// using WindowsInput;
+using WindowsInput.Native;
+using WindowsInput;
 
 
 namespace VRJester {
@@ -36,6 +35,7 @@ namespace VRJester {
 
         // The Update() method is run on every frame of the game.
         private void Update() {
+            var simu = new InputSimulator();
             if (Input.GetKeyDown(KeyCode.R)) {
                 rightController = InputDevices.GetDeviceAtXRNode(XRNode.RightHand);
                 rightController.TryGetFeatureValue(CommonUsages.devicePosition, out Vector3 rc);
@@ -46,13 +46,13 @@ namespace VRJester {
             }
             if (Input.GetKeyDown(KeyCode.LeftShift)) {
                 Log.Debug("Left Shift has been pressed");
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
+
                 HandleNonVrGesture();
             }
             if(Input.GetKeyDown(KeyCode.G)){
                 Log.Debug("G has been pressd");
-                SendKeys.Send("{T}");
-                // var simu = new InputSimulator();
-                // simu.Keyboard.KeyPress(VirtualKeyCode.VK_T);
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
             }
             if(Input.GetKeyDown(KeyCode.T)){
                 Log.Debug("T has been pressed");
