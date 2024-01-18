@@ -6,6 +6,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 using Rewired.Utils;
+using WindowsInput.Native;
+using WindowsInput;
+using VRJester.Core;
 
 
 namespace VRJester {
@@ -74,6 +77,11 @@ namespace VRJester {
         private static void SetupClient() {
             Log.Info("Setting up client...");
             GestureHandler.gestures.Load();
+            var simu = new InputSimulator();
+            if(GestureHandler.gestures.Equals("Strike")){
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
+            }
+
         }
     }
 }

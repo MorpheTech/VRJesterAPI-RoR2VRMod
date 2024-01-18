@@ -52,7 +52,8 @@ namespace VRJester {
             }
             if(Input.GetKeyDown(KeyCode.G)){
                 Log.Debug("G has been pressd");
-                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
+                simu.Keyboard.KeyPress(VirtualKeyCode.VK_T);
+                // simu.Mouse.LeftButtonClick(); //has a big delay 
             }
             if(Input.GetKeyDown(KeyCode.T)){
                 Log.Debug("T has been pressed");
@@ -64,6 +65,7 @@ namespace VRJester {
                 }
                 HandleVrGesture();
             }
+  
         }
 
         private static void HandleVrGesture() {
