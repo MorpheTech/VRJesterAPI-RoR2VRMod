@@ -19,7 +19,7 @@ namespace VRJester {
         public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
         public int INTERVAL_DELAY = Constants.INTERVAL_DELAY;
         public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
-        public Dictionary<string, Dictionary<string, string>> GESTURE_KEY_MAPPINGS = [];
+        public Dictionary<string, Dictionary<string, string>> GESTURE_ACTIONS = [];
 
         public Config() {}
 
@@ -76,20 +76,20 @@ namespace VRJester {
             try {
                 Config config = new();
                 Dictionary<string, string> keyMappingContext = new() {
-                    ["KEY_MAPPING"] = "examplemod.key.ability_1",
+                    ["KEY_BIND"] = "examplemod.key.ability_1",
                     ["KEY_ACTION"] = "click"
                 };
-                config.GESTURE_KEY_MAPPINGS["GESTURE 1"] = keyMappingContext;
+                config.GESTURE_ACTIONS["GESTURE 1"] = keyMappingContext;
                 Dictionary<string, string> keyMappingContext2 = new() {
-                    ["KEY_MAPPING"] = "key.keyboard.keypad.2",
+                    ["KEY_BIND"] = "key.keyboard.keypad.2",
                     ["KEY_ACTION"] = "hold"
                 };
-                config.GESTURE_KEY_MAPPINGS["GESTURE 2"] = keyMappingContext2;
+                config.GESTURE_ACTIONS["GESTURE 2"] = keyMappingContext2;
                 Dictionary<string, string> keyMappingContext3 = new() {
-                    ["KEY_MAPPING"] = "key.keyboard.j",
+                    ["KEY_BIND"] = "key.keyboard.j",
                     ["KEY_ACTION"] = "click"
                 };
-                config.GESTURE_KEY_MAPPINGS["GESTURE 3"] = keyMappingContext3;
+                config.GESTURE_ACTIONS["GESTURE 3"] = keyMappingContext3;
                 using StreamWriter sw = new(@Constants.CONFIG_PATH);
                 using JsonTextWriter jw = new(sw);
                 jw.Formatting = Formatting.Indented;

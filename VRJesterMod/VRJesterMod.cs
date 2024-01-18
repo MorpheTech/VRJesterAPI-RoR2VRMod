@@ -2,13 +2,13 @@ using BepInEx;
 using R2API;
 using RoR2;
 using Valve.VR;
+using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Collections;
 using Rewired.Utils;
-using WindowsInput.Native;
 using WindowsInput;
-using VRJester.Core;
+using WindowsInput.Native;
 
 
 namespace VRJester {
@@ -29,7 +29,8 @@ namespace VRJester {
         public const string PluginAuthor = "Caliburs";
         public static CVRSystem VR_SYSTEM = null;
         public static bool VR_LOADED = false;
-        public static Dictionary<string, string> KEY_MAPPINGS = [];
+        public static Dictionary<string, VirtualKeyCode> KEY_MAPPINGS = [];
+        public static InputSimulator SIM = new();
 
         // The Awake() method is run at the very start when the game is initialized.
         public void Awake() {
@@ -76,11 +77,27 @@ namespace VRJester {
         private static void SetupClient() {
             Log.Info("Setting up client...");
             GestureHandler.gestures.Load();
-            var simu = new InputSimulator();
-            if(GestureHandler.gestures.Equals("STRIKE")){
-                simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
+            Log.Info("Setting up key bindings...");
+            foreach (Dictionary<string, string> gestureAction in
+                     GestureHandler.config.GESTURE_ACTIONS.Values) {
+                // foreach (KeyValuePair<string, string> kvp in gestureAction) Log.Debug(kvp.Key + " -> " + kvp.Value);
+                gestureAction.TryGetValue("KEY_BIND", out string keyBind);
+                if (keyBind.Length == 1) {
+                    VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), "VK_"+keyBind);
+                    KEY_MAPPINGS[keyBind] = keyCode;
+                    Log.Info("Storing key bind:  " + keyBind + " -> " + keyCode);
+                } else if (keyBind.Length == 0) {
+                    Log.Info("Key bind not found!");
+                } else {
+                    try {
+                        VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), keyBind);
+                        KEY_MAPPINGS[keyBind] = keyCode;
+                        Log.Info("Storing key bind:  " + keyBind + " -> " + keyCode);
+                    } catch (ArgumentException) {
+                        Log.Warning("Key bind not found! Failed to store key bind:  " + keyBind);
+                    }
+                }
             }
-
         }
     }
 }
