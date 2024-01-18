@@ -77,6 +77,7 @@ namespace VRJester {
         private static void SetupClient() {
             Log.Info("Setting up client...");
             GestureHandler.gestures.Load();
+            GestureHandler.config = VRJester.Config.ReadConfig();
             Log.Info("Setting up key bindings...");
             foreach (Dictionary<string, string> gestureAction in
                      GestureHandler.config.GESTURE_ACTIONS.Values) {

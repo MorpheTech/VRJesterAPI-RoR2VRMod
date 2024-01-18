@@ -18,12 +18,12 @@ namespace VRJester.Vox {
         private GestureTrace gestureTrace;
         public Vector3 centroid;
         public Quaternion faceDirection;
-        public float sphereRadius = Constants.VIRTUAL_SPHERE_RADIUS;
+        public float sphereRadius = Constants.VHERE_RADIUS;
 
         public Vhere(VRDevice vrDevice, VRPose centroidPose, Quaternion faceDirection, string configPath) {
             config = Config.ReadConfig(configPath); // Override defaults
-            if (config.VIRTUAL_SPHERE_RADIUS != sphereRadius) {
-                sphereRadius = config.VIRTUAL_SPHERE_RADIUS;
+            if (config.VHERE_RADIUS != sphereRadius) {
+                sphereRadius = config.VHERE_RADIUS;
             }
 
             id = 0; // Initialize Vhere Id

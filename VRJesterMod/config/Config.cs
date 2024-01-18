@@ -9,14 +9,12 @@ using VRJester.Core;
 namespace VRJester {
 
     public class Config {
-        public string RECOGNIZE_ON = Constants.RECOGNIZE_ON;
         public string GESTURE_NAME = Constants.SAMPLE_GESTURE_NAME;
         public bool RECORD_MODE = Constants.RECORD_MODE;
         public bool READ_DATA = Constants.READ_DATA;
         public bool WRITE_DATA = Constants.WRITE_DATA;
-        public bool DEMO_MODE = Constants.DEMO_MODE;
         public bool DEBUG_MODE = Constants.DEBUG_MODE;
-        public float VIRTUAL_SPHERE_RADIUS = Constants.VIRTUAL_SPHERE_RADIUS;
+        public float VHERE_RADIUS = Constants.VHERE_RADIUS;
         public int INTERVAL_DELAY = Constants.INTERVAL_DELAY;
         public int MAX_LISTENING_TIME = Constants.MAX_LISTENING_TIME;
         public Dictionary<string, Dictionary<string, string>> GESTURE_ACTIONS = [];
@@ -76,17 +74,17 @@ namespace VRJester {
             try {
                 Config config = new();
                 Dictionary<string, string> keyMappingContext = new() {
-                    ["KEY_BIND"] = "examplemod.key.ability_1",
+                    ["KEY_BIND"] = "R",
                     ["KEY_ACTION"] = "click"
                 };
                 config.GESTURE_ACTIONS["GESTURE 1"] = keyMappingContext;
                 Dictionary<string, string> keyMappingContext2 = new() {
-                    ["KEY_BIND"] = "key.keyboard.keypad.2",
+                    ["KEY_BIND"] = "F3",
                     ["KEY_ACTION"] = "hold"
                 };
                 config.GESTURE_ACTIONS["GESTURE 2"] = keyMappingContext2;
                 Dictionary<string, string> keyMappingContext3 = new() {
-                    ["KEY_BIND"] = "key.keyboard.j",
+                    ["KEY_BIND"] = "LSHIFT",
                     ["KEY_ACTION"] = "click"
                 };
                 config.GESTURE_ACTIONS["GESTURE 3"] = keyMappingContext3;
