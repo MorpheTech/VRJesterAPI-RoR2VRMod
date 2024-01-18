@@ -11,6 +11,11 @@ using UnityEngine.UIElements;
 using UnityEngine.EventSystems;
 using Rewired.HID;
 using System;
+using System.Windows.Forms;
+using IL.RoR2.Achievements.Merc;
+using R2API.Utils;
+// using WindowsInput.Native;
+// using WindowsInput;
 
 
 namespace VRJester {
@@ -45,7 +50,9 @@ namespace VRJester {
             }
             if(Input.GetKeyDown(KeyCode.G)){
                 Log.Debug("G has been pressd");
-                Event.KeyboardEvent("T");
+                SendKeys.Send("{T}");
+                // var simu = new InputSimulator();
+                // simu.Keyboard.KeyPress(VirtualKeyCode.VK_T);
             }
             if(Input.GetKeyDown(KeyCode.T)){
                 Log.Debug("T has been pressed");
