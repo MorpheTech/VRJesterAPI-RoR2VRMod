@@ -78,7 +78,7 @@ namespace VRJester {
             Log.Info("Setting up client...");
             GestureHandler.gestures.Load();
             var simu = new InputSimulator();
-            if(GestureHandler.gestures.Equals("Strike")){
+            if(GestureHandler.gestures.Equals("STRIKE")){
                 simu.Keyboard.KeyPress(VirtualKeyCode.VK_R);
             }
 
