@@ -37,11 +37,22 @@ namespace VRJester {
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
 
+            // InputSimulator dll must be moved into 'Risk of Rain 2/Risk of Rain 2_Data/Managed'
+            try {
+                string ManagedPath = Paths.ManagedPath;
+                string DestinationPath = System.IO.Path.Combine(ManagedPath, "WindowsInput.dll");
+                if (!File.Exists(DestinationPath))
+                    File.Copy("../libs/WindowsInput.dll", DestinationPath, true);
+            } catch (IOException e) {
+                Log.Error("Failed to load 'Risk of Rain 2/Risk of Rain 2_Data/Managed/WindowsInput.dll'");
+                Log.Error(e.StackTrace);
+            }
+
             // Init setup for configs and gesture mapping triggers
             gameObject.AddComponent(typeof(GestureHandler));
             SetupConfig();
             SetupClient();
-            
+
             RoR2Application.onLoad += () => {
                 StartCoroutine(InitVRJester());
             };
@@ -63,6 +74,7 @@ namespace VRJester {
             }
         }
 
+        // Setup for creating config files
         private static void SetupConfig() {
             Log.Info("Setting up config files...");
             if (!File.Exists(Constants.CONFIG_PATH)) {
@@ -73,27 +85,39 @@ namespace VRJester {
             }
         }
 
-        // Create setup for loading & assigning gestures to keys
+        // Setup for loading configs & gestures
         private static void SetupClient() {
             Log.Info("Setting up client...");
-            GestureHandler.gestures.Load();
             GestureHandler.config = VRJester.Config.ReadConfig();
+            GestureHandler.gestures.Load();
+            SetupKeyBinds();
+        }
+
+        // Setup for assigning gestures to keys
+        public static void SetupKeyBinds() {
             Log.Info("Setting up key bindings...");
             foreach (Dictionary<string, string> gestureAction in
                      GestureHandler.config.GESTURE_ACTIONS.Values) {
-                // foreach (KeyValuePair<string, string> kvp in gestureAction) Log.Debug(kvp.Key + " -> " + kvp.Value);
                 gestureAction.TryGetValue("KEY_BIND", out string keyBind);
                 if (keyBind.Length == 1) {
-                    VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), "VK_"+keyBind);
+                    VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), "VK_"+keyBind.ToUpper());
                     KEY_MAPPINGS[keyBind] = keyCode;
-                    Log.Info("Storing key bind:  " + keyBind + " -> " + keyCode);
+                    Log.Debug("Storing key bind:  " + keyBind + " -> " + keyCode);
                 } else if (keyBind.Length == 0) {
-                    Log.Info("Key bind not found!");
+                    Log.Debug("Key bind not found!");
+                } else if (keyBind.ToUpper() == "M1") {
+                    VirtualKeyCode keyCode = (VirtualKeyCode) 1;
+                    KEY_MAPPINGS[keyBind] = keyCode;
+                    Log.Debug("Storing key bind:  " + keyBind + " -> " + keyCode);
+                } else if (keyBind.ToUpper() == "M2") {
+                    VirtualKeyCode keyCode = (VirtualKeyCode) 2;
+                    KEY_MAPPINGS[keyBind] = keyCode;
+                    Log.Debug("Storing key bind:  " + keyBind + " -> " + keyCode);
                 } else {
                     try {
-                        VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), keyBind);
+                        VirtualKeyCode keyCode = (VirtualKeyCode) Enum.Parse(typeof(VirtualKeyCode), keyBind.ToUpper());
                         KEY_MAPPINGS[keyBind] = keyCode;
-                        Log.Info("Storing key bind:  " + keyBind + " -> " + keyCode);
+                        Log.Debug("Storing key bind:  " + keyBind + " -> " + keyCode);
                     } catch (ArgumentException) {
                         Log.Warning("Key bind not found! Failed to store key bind:  " + keyBind);
                     }

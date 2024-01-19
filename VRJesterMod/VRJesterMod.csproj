@@ -31,10 +31,11 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
+  <!-- <ItemGroup>
     <EmbeddedResource Include="libs\openvr_api.dll" />
     <EmbeddedResource Include="libs\SteamVR.dll" />
-  </ItemGroup>
+    <EmbeddedResource Include="libs\WindowsInput.dll" />
+  </ItemGroup> -->
 
   <ItemGroup>
     <Reference Include="SteamVR">
