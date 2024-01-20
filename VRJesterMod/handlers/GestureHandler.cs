@@ -21,7 +21,7 @@ namespace VRJester {
         private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
         private static bool toggled = false;
 
-        public static Config ReloadConfigs() {
+public static Config ReloadConfigs() {
             config = Config.ReadConfig();
             gestures.Load();
             VRJesterMod.SetupKeyBinds();
@@ -47,7 +47,7 @@ namespace VRJester {
                 if (toggled)
                     HandleVrGesture();
             }
-        }
+          }
 
         private void HandleVrGesture() {
             vrDataState = new VRDataState();
@@ -126,10 +126,18 @@ namespace VRJester {
         }
 
         private static IEnumerator KeyboardPress(VirtualKeyCode keyCode, string keyAction) {
-             if (keyAction.ToLower() == "click") {
+            if (keyAction.ToLower() == "click") {
                 VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
                 yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
                 VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
+            }
+            else if (keyAction.ToLower() == "hold") {
+                VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
+                yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
+            }
+            else if (keyAction.ToLower() == "release"){
+            VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
+            yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
             }
         }
     }
