@@ -77,17 +77,17 @@ namespace VRJester {
                     ["KEY_BIND"] = "R",
                     ["KEY_ACTION"] = "click"
                 };
-                config.GESTURE_ACTIONS["GESTURE 1"] = keyMappingContext;
+                config.GESTURE_ACTIONS["STRIKE"] = keyMappingContext;
                 Dictionary<string, string> keyMappingContext2 = new() {
-                    ["KEY_BIND"] = "F3",
+                    ["KEY_BIND"] = "M2",
                     ["KEY_ACTION"] = "hold"
                 };
-                config.GESTURE_ACTIONS["GESTURE 2"] = keyMappingContext2;
+                config.GESTURE_ACTIONS["UPPERCUT"] = keyMappingContext2;
                 Dictionary<string, string> keyMappingContext3 = new() {
                     ["KEY_BIND"] = "LSHIFT",
                     ["KEY_ACTION"] = "click"
                 };
-                config.GESTURE_ACTIONS["GESTURE 3"] = keyMappingContext3;
+                config.GESTURE_ACTIONS["BURST"] = keyMappingContext3;
                 using StreamWriter sw = new(@Constants.CONFIG_PATH);
                 using JsonTextWriter jw = new(sw);
                 jw.Formatting = Formatting.Indented;
