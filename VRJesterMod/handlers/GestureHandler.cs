@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Valve.VR;
 using VRJester.Core;
 using VRJester.Core.Recog;
 using VRJester.Utils.VRData;
