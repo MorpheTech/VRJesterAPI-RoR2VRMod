@@ -44,15 +44,15 @@ namespace VRJester.Core.Recog {
                 gestures.hmdGestureMapping.TryGetValue(foundLcGesture.HashCode(), out string name);
                 ctx[Constants.LC] = name;
             }
-            if (GestureHandler.config.DEBUG_MODE)
-                DebugLog(gesture, foundHmdGesture, foundRcGesture, foundLcGesture, id);
             gestures.gestureNameSpace.TryGetValue(id, out string gestureName);
             ctx["gestureName"] = gestureName;
+            if (GestureHandler.config.DEBUG_MODE)
+                DebugLog(gesture, foundHmdGesture, foundRcGesture, foundLcGesture, id, ctx);
             return gestureName is not null ? ctx : [];
         }
 
         // Method for debugging gesture recognition
-        public virtual void DebugLog(Gesture gesture, List<GestureComponent> foundHmdGesture, List<GestureComponent> foundRcGesture, List<GestureComponent> foundLcGesture, string id) {
+        public virtual void DebugLog(Gesture gesture, List<GestureComponent> foundHmdGesture, List<GestureComponent> foundRcGesture, List<GestureComponent> foundLcGesture, string id, Dictionary<string, string> ctx) {
             Log.Debug("TOTAL GESTURES IN NAMESPACE:  " + gestures.gestureNameSpace.Count);
             foreach (KeyValuePair<string, string> kvp in gestures.gestureNameSpace)
                 Log.Debug("ID: " + kvp.Key + " -> " + kvp.Value);
@@ -67,6 +67,8 @@ namespace VRJester.Core.Recog {
                 Log.Debug("foundLcGesture:  " + string.Join(", ", foundLcGesture));
             if (id != "")
                 Log.Debug("RECOGNIZE ID:  " + id);
+            if (ctx.Count != 0)
+                Log.Debug("RECOGNIZED: " + ctx["gestureName"]);
         }
     }
 }

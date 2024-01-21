@@ -21,7 +21,7 @@ namespace VRJester {
         private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
         private static bool toggled = false;
 
-public static Config ReloadConfigs() {
+        public static Config ReloadConfigs() {
             config = Config.ReadConfig();
             gestures.Load();
             VRJesterMod.SetupKeyBinds();
@@ -39,15 +39,15 @@ public static Config ReloadConfigs() {
                     Log.Info("Reloading configs...");
                     ReloadConfigs();
                     ResetJesterListener();
-                    if (toggled)
-                        toggled = false;
-                    else
-                        toggled = true;
+                    // if (toggled)
+                    //     toggled = false;
+                    // else
+                    //     toggled = true;
                 }
-                if (toggled)
+                // if (toggled)
                     HandleVrGesture();
             }
-          }
+        }
 
         private void HandleVrGesture() {
             vrDataState = new VRDataState();
@@ -69,8 +69,6 @@ public static Config ReloadConfigs() {
                     if (!previousGesture.Equals(recognizedGesture["gestureName"])) { // Initial gesture recognition
                         previousGesture = recognizedGesture["gestureName"];
                         StartCoroutine(TriggerAction(previousGesture));
-                        if (config.DEBUG_MODE)
-                            Log.Debug("RECOGNIZED: " + recognizedGesture["gestureName"]);
                         sleep = DELAY; // Reset ticker to extend listening time
                         limiter = config.MAX_LISTENING_TIME; // Reset limiter
                     }
@@ -122,6 +120,14 @@ public static Config ReloadConfigs() {
                 VRJesterMod.SIM.Mouse.RightButtonDown();
                 yield return null; yield return null;
                 VRJesterMod.SIM.Mouse.RightButtonUp();
+            } else if (keyAction.ToLower() == "hold" && keyCode == VirtualKeyCode.LBUTTON) {
+                VRJesterMod.SIM.Mouse.LeftButtonDown();
+            } else if (keyAction.ToLower() == "release" && keyCode == VirtualKeyCode.LBUTTON){
+                VRJesterMod.SIM.Mouse.LeftButtonUp();
+            } else if (keyAction.ToLower() == "hold" && keyCode == VirtualKeyCode.RBUTTON) {
+                VRJesterMod.SIM.Mouse.RightButtonDown();
+            } else if (keyAction.ToLower() == "release" && keyCode == VirtualKeyCode.RBUTTON){
+                VRJesterMod.SIM.Mouse.RightButtonUp();
             }
         }
 
@@ -130,14 +136,10 @@ public static Config ReloadConfigs() {
                 VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
                 yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
                 VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
-            }
-            else if (keyAction.ToLower() == "hold") {
+            } else if (keyAction.ToLower() == "hold") {
                 VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
-                yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
-            }
-            else if (keyAction.ToLower() == "release"){
-            VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
-            yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
+            } else if (keyAction.ToLower() == "release"){
+                VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
             }
         }
     }
