@@ -34,9 +34,6 @@ namespace VRJesterPatcher {
                 Logger.LogInfo("Successfully copied VRJester plugins!");
             else
                 Logger.LogInfo("VRJester plugins already present");
-
-            Logger.LogInfo("Checking for binding files...");
-
         }
 
         private static bool CopyFiles(string destinationPath, string[] fileNames, string embedFolder) {
