@@ -19,7 +19,7 @@ namespace VRJester {
         private static readonly int DELAY = config.INTERVAL_DELAY; // 0.75 second (15 ticks)
         private static int sleep = DELAY;
         private static int limiter = config.MAX_LISTENING_TIME; // 10 seconds (400 ticks)
-        private static bool toggled = false;
+        // private static bool toggled = false;
 
         public static Config ReloadConfigs() {
             config = Config.ReadConfig();
@@ -32,7 +32,6 @@ namespace VRJester {
         private void Update() {
             if (Input.GetKeyDown(KeyCode.G)) {
                 ReloadConfigs();
-                StartCoroutine(TriggerAction("STRIKE"));
             }
             if (VRJesterMod.VR_LOADED) {
                 if (Input.GetKeyDown(KeyCode.G)) {
@@ -45,7 +44,7 @@ namespace VRJester {
                     //     toggled = true;
                 }
                 // if (toggled)
-                    HandleVrGesture();
+                HandleVrGesture();
             }
         }
 
@@ -105,8 +104,6 @@ namespace VRJester {
                 yield return MousePress(keyCode, keyAction);
             else
                 yield return KeyboardPress(keyCode, keyAction);
-
-            // TODO - Account for hold gestures by creating toggle & release KEY_ACTION's
         }
 
         private static IEnumerator MousePress(VirtualKeyCode keyCode, string keyAction) {

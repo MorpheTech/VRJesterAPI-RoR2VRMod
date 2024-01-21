@@ -37,17 +37,6 @@ namespace VRJester {
             // Init our logging class so that we can properly log for debugging
             Log.Init(Logger);
 
-            // InputSimulator dll must be moved into 'Risk of Rain 2/Risk of Rain 2_Data/Managed'
-            try {
-                string ManagedPath = Paths.ManagedPath;
-                string DestinationPath = System.IO.Path.Combine(ManagedPath, "WindowsInput.dll");
-                if (!File.Exists(DestinationPath))
-                    File.Copy("../libs/WindowsInput.dll", DestinationPath, true);
-            } catch (IOException e) {
-                Log.Error("Failed to load 'Risk of Rain 2/Risk of Rain 2_Data/Managed/WindowsInput.dll'");
-                Log.Error(e.StackTrace);
-            }
-
             // Init setup for configs and gesture mapping triggers
             gameObject.AddComponent(typeof(GestureHandler));
             SetupConfig();

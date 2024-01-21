@@ -25,7 +25,7 @@ namespace VRJester.Core {
         }
 
         public override string ToString() {
-            return string.Format("GCPath[ {0} | Movement={1} | Direction={2} | Time={3:D} | Speed={4:F}]", VrDevice, Movement, Direction, ElapsedTime, Speed);
+            return string.Format("GCPath[ {0} | Movement={1} | Direction={2} | Time={3:D} | Speed={4:F} | Proximity Devices:{5}]", VrDevice, Movement, Direction, ElapsedTime, Speed, string.Join(",", DevicesInProximity));
         }
 
         // Note to self: DO NOT include VrDevice in hashCode, this is how 'either or' functionality works.
