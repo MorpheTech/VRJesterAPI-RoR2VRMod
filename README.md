@@ -1,6 +1,10 @@
 # VRJesterAPI-RoR2VRMod
 A VR Gesture Recognition API that allows Risk of Rain 2 mod developers to integrate their mods with VR.
 
+https://imgur.com/JQDu2hs
+
+https://imgur.com/JiVBah0
+
 ## Usage:
 
 1. After installing the mod and its dependencies, run the modded game so the config files can be generated.
