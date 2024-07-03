@@ -108,12 +108,10 @@ namespace VRJester {
 
         private static IEnumerator MousePress(VirtualKeyCode keyCode, string keyAction) {
             if (keyAction.ToLower() == "click" && keyCode == VirtualKeyCode.LBUTTON) {
-                // VRJesterMod.SIM.Mouse.LeftButtonClick();
                 VRJesterMod.SIM.Mouse.LeftButtonDown();
                 yield return null; yield return null;
                 VRJesterMod.SIM.Mouse.LeftButtonUp();
             } else if (keyAction.ToLower() == "click" && keyCode == VirtualKeyCode.RBUTTON) {
-                // VRJesterMod.SIM.Mouse.RightButtonClick();
                 VRJesterMod.SIM.Mouse.RightButtonDown();
                 yield return null; yield return null;
                 VRJesterMod.SIM.Mouse.RightButtonUp();
@@ -131,7 +129,7 @@ namespace VRJester {
         private static IEnumerator KeyboardPress(VirtualKeyCode keyCode, string keyAction) {
             if (keyAction.ToLower() == "click") {
                 VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
-                yield return null; yield return null; // yield return new WaitForSeconds(3.0F);
+                yield return null; yield return null;
                 VRJesterMod.SIM.Keyboard.KeyUp(keyCode);
             } else if (keyAction.ToLower() == "hold") {
                 VRJesterMod.SIM.Keyboard.KeyDown(keyCode);
