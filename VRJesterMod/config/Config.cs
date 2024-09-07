@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using Newtonsoft.Json;
 using VRJester.Core;
+using VRJester.Utils.VRData;
 
 
 namespace VRJester {
@@ -154,6 +155,8 @@ namespace VRJester {
             GestureHandler.gestures.Write();
 
             // -- Gesture Recognition Tests --
+            GestureFactory gestureFactory = new(Constants.RC, "forward", 0, 0.0, dir, devices);
+            GestureComponent gestureComponent = gestureFactory.CreateGestureComponent("", "back");
             // hmdGesture.Clear(); lcGesture.Clear();
             // Dictionary<string, string> recognizedGesture = GestureHandler.recognition.Recognize(strikeGesture);
             // recognizedGesture.TryGetValue("gestureName", out string gestureName);

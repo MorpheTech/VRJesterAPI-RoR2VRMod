@@ -17,9 +17,24 @@ namespace VRJester.Utils.VRData {
         public string direction = direction;
         public IDictionary<string, int> devicesInProximity = devicesInProximity;
 
-        public GestureComponent CreateGestureComponent() {
-            return new GestureComponent(vrDevice, movement, elapsedTime, speed, direction, devicesInProximity);
+        public GestureComponent CreateGestureComponent(string vrDevice="", string movement="", long elapsedTime=0, double speed=0.0, string direction="") {
+            // Override object fields if value provided
+            if (vrDevice != "")
+                this.vrDevice = vrDevice;
+            if (movement != "")
+                this.movement = movement;
+            if (elapsedTime != 0)
+                this.elapsedTime = elapsedTime;
+            if (speed != 0)
+                this.speed = speed;
+            if (direction != "")
+                this.direction = direction;
+            return new GestureComponent(this.vrDevice, movement, elapsedTime, speed, direction, devicesInProximity);
+        }
+
+        public Gesture CreateGesture(List<GestureComponent> hmdGesture, List<GestureComponent> rcGesture, List<GestureComponent> lcGesture, IList<string> validDevices) {
+            Gesture gesture = new(hmdGesture, rcGesture, lcGesture);
+            return gesture;
         }
     }
-
 }
