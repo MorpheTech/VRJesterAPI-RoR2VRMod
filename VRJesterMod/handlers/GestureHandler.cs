@@ -57,7 +57,8 @@ namespace VRJester {
             }
 
             // TODO - Implement way to only try to recognize the 1st GestureComponent,
-            // then attempt to recognize the rest of the gesture. If a gesture is recognized,
+            // then attempt to recognize the rest of the gesture. If a GestureComponent is recognized,
+            // extend the listening time! If a gesture is recognized,
             // wait a bit longer for the next interval to see if another gesture is recognized.
             // First GestureComponent's should be unique and intentional so that when the user 
             // wants to perform a gesture they won't have to wait for the interval to reset the gesture.
