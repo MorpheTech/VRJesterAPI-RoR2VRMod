@@ -5,6 +5,8 @@ https://imgur.com/JQDu2hs
 
 https://imgur.com/JiVBah0
 
+**Download:** https://thunderstore.io/package/MorpheTech/VRJesterMod/
+
 ## Usage:
 
 1. After installing the mod and its dependencies, run the modded game so the config files can be generated.
